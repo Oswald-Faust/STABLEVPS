@@ -1,0 +1,403 @@
+{
+  "header": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "locations": "Locations",
+    "security": "Security",
+    "faq": "FAQ",
+    "login": "Login",
+    "start": "Get Started"
+  },
+  "promo": {
+    "banner": "🚀 LAUNCH OFFER: {discount} off on all plans with code",
+    "cta": "Claim Now"
+  },
+  "hero": {
+    "badge": "+500 Traders trust us",
+    "title1": "The",
+    "titleHighlight": "Trading",
+    "title2": "VPS that never",
+    "titleHighlight2": "sleeps",
+    "subtitle": "Your Windows desktop stays connected and operational in the Cloud 24/7. Ultra-low latency of {latency}, Anti-DDoS protection and technical support available at all times.",
+    "features": {
+      "latency": "Latency as low as 1ms",
+      "support": "24/7 Support",
+      "compatible": "Compatible with all EAs & bots",
+      "uptime": "99.9% Uptime guaranteed"
+    },
+    "cta": "Launch my VPS",
+    "ctaSecondary": "How does it work?",
+    "trust": {
+      "trustpilot": "4.9/5 on Trustpilot",
+      "refund": "14-day money-back guarantee",
+      "uptime": "100% Uptime SLA"
+    }
+  },
+  "howItWorks": {
+    "badge": "Simple & Fast",
+    "title": "How does a",
+    "titleHighlight": "VPS work?",
+    "subtitle": "Your Windows desktop never sleeps. It stays connected and operational in the Cloud even when your computer is off.",
+    "diagram": {
+      "yourPc": "Your PC",
+      "yourPcDesc": "Connect from anywhere",
+      "cloud": "CLOUD",
+      "cloudDesc": "Dedicated server 24/7",
+      "alwaysActive": "Always active",
+      "broker": "Your Broker",
+      "brokerDesc": "Ultra-low latency"
+    },
+    "steps": {
+      "step1": {
+        "title": "Choose your plan",
+        "description": "Select the VPS plan that fits your trading needs. From 1 to 10+ simultaneous platforms."
+      },
+      "step2": {
+        "title": "Instant setup",
+        "description": "Your VPS is deployed in less than 5 minutes. Receive your credentials directly by email."
+      },
+      "step3": {
+        "title": "Connect via RDP",
+        "description": "Access your Windows desktop from any device: PC, Mac, tablet or smartphone."
+      },
+      "step4": {
+        "title": "Trade 24/7",
+        "description": "Your VPS stays active even while you sleep. Your bots and EAs run without interruption."
+      }
+    }
+  },
+  "features": {
+    "badge": "Why STABLEVPS?",
+    "title": "Premium",
+    "titleHighlight": "features",
+    "subtitle": "Everything you need for professional trading, without compromise.",
+    "items": {
+      "latency": {
+        "title": "Ultra-Low Latency",
+        "description": "Execution times as low as 1ms thanks to our optimized network and servers located in major financial datacenters.",
+        "stat": "<1ms",
+        "statLabel": "Average latency"
+      },
+      "uptime": {
+        "title": "24/7 Availability",
+        "description": "Your VPS stays active at all times, even when your computer is off. Your trading EAs and bots keep running.",
+        "stat": "99.9%",
+        "statLabel": "Guaranteed uptime"
+      },
+      "ddos": {
+        "title": "Anti-DDoS Protection",
+        "description": "Shield protection against volumetric attacks and L4 network threats. Real-time protection guaranteed.",
+        "stat": "L4",
+        "statLabel": "Protection"
+      },
+      "storage": {
+        "title": "Fast NVMe Storage",
+        "description": "Ultra-fast NVMe SSDs for instant platform startup and latency-free data access.",
+        "stat": "NVMe",
+        "statLabel": "Fast SSD"
+      },
+      "rdp": {
+        "title": "Full RDP Access",
+        "description": "Connect to your Windows desktop from any device. PC, Mac, tablet or smartphone, everything works.",
+        "stat": "RDP",
+        "statLabel": "Remote Desktop"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Our technical team is available 24/7 to answer your questions and solve your problems.",
+        "stat": "24/7",
+        "statLabel": "Dedicated support"
+      }
+    },
+    "compatibility": {
+      "title": "Compatible with all your",
+      "titleHighlight": "platforms",
+      "description": "MetaTrader 4 & 5, cTrader, NinjaTrader and all trading robots. Install whatever you want on your Windows VPS.",
+      "stats": {
+        "traders": "Active traders",
+        "trades": "Trades executed",
+        "uptime": "Average uptime",
+        "latency": "Average latency"
+      }
+    }
+  },
+  "pricing": {
+    "badge": "Simple & transparent pricing",
+    "title": "Choose your",
+    "titleHighlight": "VPS Plan",
+    "subtitle": "All our plans include a 14-day money-back guarantee.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "discount": "-17%",
+    "perMonth": "/month",
+    "billedYearly": "Billed {price}€/year",
+    "platforms": "platforms",
+    "specs": {
+      "cpu": "CPU",
+      "ram": "RAM",
+      "storage": "Storage",
+      "os": "OS"
+    },
+    "plans": {
+      "basic": {
+        "name": "Basic",
+        "description": "Perfect for beginners"
+      },
+      "prime": {
+        "name": "Prime",
+        "description": "Most popular",
+        "popular": "POPULAR"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For serious traders"
+      }
+    },
+    "features": {
+      "latency5": "Latency < 5ms",
+      "latency2": "Latency < 2ms",
+      "latency1": "Latency < 1ms",
+      "ddos": "Anti-DDoS Protection",
+      "ddosShield": "Anti-DDoS Shield Protection",
+      "ddosElite": "Anti-DDoS Elite Protection",
+      "autoLogon": "Auto-Logon enabled",
+      "rdp": "RDP Access",
+      "dedicatedIp": "Dedicated IP",
+      "backups": "Automatic backups",
+      "monitoring": "Advanced monitoring",
+      "supportStandard": "Standard Support",
+      "supportPriority": "Priority Support 24/7",
+      "supportVip": "VIP Support 24/7",
+      "guaranteed": "Guaranteed resources"
+    },
+    "cta": "Get Started",
+    "paymentMethods": "Accepted payment methods"
+  },
+  "locations": {
+    "badge": "Global Infrastructure",
+    "title": "Our",
+    "titleHighlight": "Datacenter Locations",
+    "subtitle": "Servers strategically placed in major financial centers for minimal latency to your broker.",
+    "latency": "Latency",
+    "infoTitle": "Which location should I choose?",
+    "infoText": "Choose the datacenter closest to your {broker}, not to you. For European Forex brokers, we recommend {london} or {amsterdam}.",
+    "broker": "broker",
+    "cities": {
+      "london": "London",
+      "amsterdam": "Amsterdam",
+      "frankfurt": "Frankfurt",
+      "newYork": "New York",
+      "singapore": "Singapore",
+      "tokyo": "Tokyo"
+    },
+    "countries": {
+      "uk": "UK",
+      "netherlands": "Netherlands",
+      "germany": "Germany",
+      "usa": "USA",
+      "sg": "Singapore",
+      "japan": "Japan"
+    }
+  },
+  "security": {
+    "badge": "Maximum Security",
+    "title": "Cybersecurity:",
+    "titleHighlight": "Elite performance",
+    "subtitle": "With Anti-DDoS Shield, benefit from real-time protection against volumetric attacks and L4 network threats.",
+    "stats": {
+      "incidents": "Security incidents",
+      "protection": "Protection level",
+      "encryption": "Encryption",
+      "monitoring": "Monitoring"
+    },
+    "features": {
+      "ddos": {
+        "title": "Anti-DDoS Shield Protection",
+        "description": "Real-time protection against volumetric attacks and L4 network threats. Your service stays available even under attack."
+      },
+      "encryption": {
+        "title": "End-to-end encryption",
+        "description": "All RDP communications are encrypted with the latest security standards. Your data stays confidential."
+      },
+      "backups": {
+        "title": "Automatic backups",
+        "description": "Regular backups of your environment. In case of problems, restore your VPS in a few clicks."
+      },
+      "monitoring": {
+        "title": "24/7 Monitoring",
+        "description": "Continuous infrastructure monitoring. Proactive detection and resolution of issues before they affect your trading."
+      }
+    }
+  },
+  "faq": {
+    "badge": "Frequently asked questions",
+    "title": "Questions?",
+    "titleHighlight": "We answer",
+    "subtitle": "Everything you need to know before launching your trading VPS.",
+    "contact": "Can't find the answer to your question?",
+    "contactLink": "Contact our support",
+    "items": {
+      "q1": {
+        "question": "How does a VPS work for trading?",
+        "answer": "A VPS (Virtual Private Server) is a virtual server that runs 24/7 in the cloud. You connect remotely via RDP (Remote Desktop) to a Windows desktop where you install your trading platforms. Even if your PC is off, the VPS keeps running your EAs and bots."
+      },
+      "q2": {
+        "question": "Which location should I choose?",
+        "answer": "Choose the location closest to your broker's servers, not to you. For most European Forex brokers, we recommend London or Amsterdam. For US brokers, New York is ideal. This minimizes latency and optimizes order execution."
+      },
+      "q3": {
+        "question": "Which plan is right for me?",
+        "answer": "It depends on how many platforms you want to run: Basic (1-3 platforms) for beginners, Prime (3-6 platforms) for active traders, Pro (6-10+ platforms) for professionals. If you use resource-intensive EAs, choose a higher plan."
+      },
+      "q4": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept Visa, Mastercard, PayPal and cryptocurrencies (Bitcoin, Ethereum, USDT). All payments are secure and you receive an automatic invoice for each transaction."
+      },
+      "q5": {
+        "question": "What is latency and why is it important?",
+        "answer": "Latency is the time it takes for a signal to go from your VPS to your broker's server. Low latency (<5ms) means your orders are executed faster, which is crucial for scalping and high-frequency EAs. Our infrastructure is optimized to offer minimal latency."
+      },
+      "q6": {
+        "question": "How many platforms can I run?",
+        "answer": "It depends on your plan: Basic allows 1-3 platforms, Prime 3-6 platforms, and Pro 6-10+ platforms. These figures are recommendations based on allocated resources. You can install more, but performance may be impacted."
+      },
+      "q7": {
+        "question": "From which devices can I access my VPS?",
+        "answer": "You can connect from any device: Windows PC, Mac, iPad/Android tablet, or even smartphone. All you need is an RDP app (free) and an internet connection."
+      },
+      "q8": {
+        "question": "What is your refund policy?",
+        "answer": "We offer a 14-day money-back guarantee. If you're not satisfied with our service for any reason, contact our support and we'll refund you in full, no questions asked."
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to trade",
+    "titleHighlight": "24/7",
+    "subtitle": "Join 500+ traders who trust STABLEVPS for their automated trading operations.",
+    "primary": "Launch my VPS now",
+    "secondary": "Learn more",
+    "trust": {
+      "refund": "14-day money-back guarantee",
+      "noCommitment": "No commitment",
+      "setup": "Setup in 5 minutes"
+    }
+  },
+  "footer": {
+    "description": "High-performance VPS for Forex trading. Ultra-low latency, guaranteed uptime, 24/7 support.",
+    "sections": {
+      "product": "Product",
+      "support": "Support",
+      "company": "Company",
+      "legal": "Legal"
+    },
+    "links": {
+      "pricing": "Pricing",
+      "features": "Features",
+      "locations": "Locations",
+      "security": "Security",
+      "helpCenter": "Help Center",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "status": "Status",
+      "about": "About",
+      "blog": "Blog",
+      "partners": "Partners",
+      "affiliate": "Affiliate",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "legalNotice": "Legal Notice",
+      "gdpr": "GDPR"
+    },
+    "payments": "Secure payments:",
+    "ssl": "SSL Secured",
+    "rgpdCompliant": "GDPR Compliant",
+    "copyright": "© {year} STABLEVPS. All rights reserved.",
+    "disclaimer": "STABLEVPS is not a financial advisor. Trading involves risks."
+  },
+  "common": {
+    "learnMore": "Learn more"
+  },
+  "login": {
+    "heroTitle": "Access your",
+    "heroHighlight": "Trading VPS",
+    "heroSubtitle": "Manage your servers, track your performance and optimize your trading 24/7.",
+    "features": {
+      "latency": "Ultra-low latency < 1ms",
+      "security": "Advanced Anti-DDoS protection",
+      "locations": "6 datacenters worldwide",
+      "support": "24/7 technical support"
+    },
+    "trustBadge": "4.9/5 on Trustpilot",
+    "traders": "+500 active traders",
+    "title": "Sign In",
+    "subtitle": "Access your client area",
+    "or": "or",
+    "email": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "signUp": "Create an account",
+    "securedWithSSL": "Secured with SSL 256-bit encryption"
+  },
+  "signup": {
+    "title": "Create your",
+    "titleHighlight": "Trading VPS",
+    "subtitle": "Join 500+ traders who trust us for their automated trading operations.",
+    "paymentCanceled": "Payment was canceled. You can try again.",
+    "steps": {
+      "plan": "Plan",
+      "location": "Location",
+      "account": "Account"
+    },
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "popular": "POPULAR",
+    "platforms": "platforms",
+    "continue": "Continue",
+    "back": "Back",
+    "locationHint": "Choose the datacenter closest to your broker's servers, not to you.",
+    "latency": "Latency",
+    "plan": "Plan",
+    "locationLabel": "Location",
+    "billing": "Billing",
+    "total": "Total",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordHint": "Minimum 8 characters",
+    "confirmPassword": "Confirm password",
+    "termsAgree": "I agree to the",
+    "terms": "terms of service",
+    "and": "and",
+    "privacy": "privacy policy",
+    "payNow": "Pay",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "securePayment": "Secure payment",
+    "moneyBackGuarantee": "14-day money-back guarantee",
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters"
+    }
+  },
+  "signupSuccess": {
+    "title": "Payment successful",
+    "subtitle": "Your VPS is being provisioned. You will receive your credentials by email in a few minutes.",
+    "nextSteps": "Next steps",
+    "step1Title": "Check your emails",
+    "step1Desc": "You will receive an email with your RDP credentials.",
+    "step2Title": "Download an RDP client",
+    "step2Desc": "Microsoft Remote Desktop (Mac/Windows) or Remmina (Linux).",
+    "step3Title": "Connect to your VPS",
+    "step3Desc": "Use the received credentials to access your Windows desktop.",
+    "goToDashboard": "Go to dashboard",
+    "redirecting": "Redirecting in {seconds} seconds..."
+  }
+}
+

@@ -1,0 +1,403 @@
+{
+  "header": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "locations": "Localisations",
+    "security": "Sécurité",
+    "faq": "FAQ",
+    "login": "Connexion",
+    "start": "Commencer"
+  },
+  "promo": {
+    "banner": "🚀 OFFRE DE LANCEMENT : {discount} sur tous les plans avec le code",
+    "cta": "Profiter"
+  },
+  "hero": {
+    "badge": "+500 Traders nous font confiance",
+    "title1": "Le VPS",
+    "titleHighlight": "Trading",
+    "title2": "qui ne dort",
+    "titleHighlight2": "jamais",
+    "subtitle": "Votre bureau Windows reste connecté et opérationnel dans le Cloud 24/7. Latence ultra-faible de {latency}, protection Anti-DDoS et support technique disponible à tout moment.",
+    "features": {
+      "latency": "Latence aussi basse que 1ms",
+      "support": "Support 24/7",
+      "compatible": "Compatible tous EAs & bots",
+      "uptime": "Uptime garanti 99.9%"
+    },
+    "cta": "Lancer mon VPS",
+    "ctaSecondary": "Comment ça marche ?",
+    "trust": {
+      "trustpilot": "4.9/5 sur Trustpilot",
+      "refund": "14 jours satisfait ou remboursé",
+      "uptime": "100% Uptime SLA"
+    }
+  },
+  "howItWorks": {
+    "badge": "Simple & Rapide",
+    "title": "Comment fonctionne un",
+    "titleHighlight": "VPS ?",
+    "subtitle": "Votre bureau Windows ne dort jamais. Il reste connecté et opérationnel dans le Cloud même si votre ordinateur est éteint.",
+    "diagram": {
+      "yourPc": "Votre PC",
+      "yourPcDesc": "Connexion depuis n'importe où",
+      "cloud": "CLOUD",
+      "cloudDesc": "Serveur dédié 24/7",
+      "alwaysActive": "Toujours actif",
+      "broker": "Votre Broker",
+      "brokerDesc": "Latence ultra-faible"
+    },
+    "steps": {
+      "step1": {
+        "title": "Choisissez votre plan",
+        "description": "Sélectionnez le plan VPS adapté à vos besoins de trading. De 1 à 10+ plateformes simultanées."
+      },
+      "step2": {
+        "title": "Configuration instantanée",
+        "description": "Votre VPS est déployé en moins de 5 minutes. Recevez vos accès directement par email."
+      },
+      "step3": {
+        "title": "Connectez-vous via RDP",
+        "description": "Accédez à votre bureau Windows depuis n'importe quel appareil : PC, Mac, tablette ou smartphone."
+      },
+      "step4": {
+        "title": "Tradez 24/7",
+        "description": "Votre VPS reste actif même quand vous dormez. Vos bots et EAs tournent sans interruption."
+      }
+    }
+  },
+  "features": {
+    "badge": "Pourquoi STABLEVPS ?",
+    "title": "Des fonctionnalités",
+    "titleHighlight": "premium",
+    "subtitle": "Tout ce dont vous avez besoin pour un trading professionnel, sans compromis.",
+    "items": {
+      "latency": {
+        "title": "Latence Ultra-Faible",
+        "description": "Des temps d'exécution aussi bas que 1ms grâce à notre réseau optimisé et nos serveurs situés dans les datacenters financiers majeurs.",
+        "stat": "<1ms",
+        "statLabel": "Latence moyenne"
+      },
+      "uptime": {
+        "title": "Disponibilité 24/7",
+        "description": "Votre VPS reste actif en permanence, même quand votre ordinateur est éteint. Vos EAs et bots de trading continuent de fonctionner.",
+        "stat": "99.9%",
+        "statLabel": "Uptime garanti"
+      },
+      "ddos": {
+        "title": "Protection Anti-DDoS",
+        "description": "Bouclier Shield contre les attaques volumétriques et les menaces réseau de niveau L4. Protection en temps réel assurée.",
+        "stat": "L4",
+        "statLabel": "Protection"
+      },
+      "storage": {
+        "title": "Stockage NVMe Rapide",
+        "description": "Disques SSD NVMe ultra-rapides pour un démarrage instantané de vos plateformes et un accès aux données sans latence.",
+        "stat": "NVMe",
+        "statLabel": "SSD rapide"
+      },
+      "rdp": {
+        "title": "Accès RDP Complet",
+        "description": "Connectez-vous à votre bureau Windows depuis n'importe quel appareil. PC, Mac, tablette ou smartphone, tout fonctionne.",
+        "stat": "RDP",
+        "statLabel": "Remote Desktop"
+      },
+      "support": {
+        "title": "Support 24/7",
+        "description": "Notre équipe technique est disponible 24h/24 et 7j/7 pour répondre à vos questions et résoudre vos problèmes.",
+        "stat": "24/7",
+        "statLabel": "Support dédié"
+      }
+    },
+    "compatibility": {
+      "title": "Compatible avec toutes vos",
+      "titleHighlight": "plateformes",
+      "description": "MetaTrader 4 & 5, cTrader, NinjaTrader et tous les robots de trading. Installez ce que vous voulez sur votre VPS Windows.",
+      "stats": {
+        "traders": "Traders actifs",
+        "trades": "Trades exécutés",
+        "uptime": "Uptime moyen",
+        "latency": "Latence moyenne"
+      }
+    }
+  },
+  "pricing": {
+    "badge": "Tarifs simples & transparents",
+    "title": "Choisissez votre",
+    "titleHighlight": "Plan VPS",
+    "subtitle": "Tous nos plans incluent une garantie satisfait ou remboursé de 14 jours.",
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "discount": "-17%",
+    "perMonth": "/mois",
+    "billedYearly": "Facturé {price}€/an",
+    "platforms": "plateformes",
+    "specs": {
+      "cpu": "CPU",
+      "ram": "RAM",
+      "storage": "Stockage",
+      "os": "OS"
+    },
+    "plans": {
+      "basic": {
+        "name": "Basique",
+        "description": "Parfait pour débuter"
+      },
+      "prime": {
+        "name": "Prime",
+        "description": "Le plus populaire",
+        "popular": "POPULAIRE"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Pour les traders sérieux"
+      }
+    },
+    "features": {
+      "latency5": "Latence < 5ms",
+      "latency2": "Latence < 2ms",
+      "latency1": "Latence < 1ms",
+      "ddos": "Protection Anti-DDoS",
+      "ddosShield": "Protection Anti-DDoS Shield",
+      "ddosElite": "Protection Anti-DDoS Elite",
+      "autoLogon": "Auto-Logon activé",
+      "rdp": "Accès RDP",
+      "dedicatedIp": "IP Dédiée",
+      "backups": "Backups automatiques",
+      "monitoring": "Monitoring avancé",
+      "supportStandard": "Support Standard",
+      "supportPriority": "Support Prioritaire 24/7",
+      "supportVip": "Support VIP 24/7",
+      "guaranteed": "Ressources garanties"
+    },
+    "cta": "Commencer",
+    "paymentMethods": "Moyens de paiement acceptés"
+  },
+  "locations": {
+    "badge": "Infrastructure Mondiale",
+    "title": "Localisation de nos",
+    "titleHighlight": "Datacenters",
+    "subtitle": "Des serveurs stratégiquement placés dans les centres financiers majeurs pour une latence minimale vers votre broker.",
+    "latency": "Latence",
+    "infoTitle": "Quelle localisation choisir ?",
+    "infoText": "Choisissez le datacenter le plus proche de votre {broker}, pas de vous. Pour les brokers Forex européens, nous recommandons {london} ou {amsterdam}.",
+    "broker": "broker",
+    "cities": {
+      "london": "Londres",
+      "amsterdam": "Amsterdam",
+      "frankfurt": "Francfort",
+      "newYork": "New York",
+      "singapore": "Singapore",
+      "tokyo": "Tokyo"
+    },
+    "countries": {
+      "uk": "UK",
+      "netherlands": "Pays-Bas",
+      "germany": "Allemagne",
+      "usa": "USA",
+      "sg": "Singapour",
+      "japan": "Japon"
+    }
+  },
+  "security": {
+    "badge": "Sécurité Maximale",
+    "title": "Cybersécurité :",
+    "titleHighlight": "L'élite de la performance",
+    "subtitle": "Grâce au bouclier Anti-DDoS Shield, bénéficiez d'une protection en temps réel contre les attaques volumétriques et les menaces réseau de niveau L4.",
+    "stats": {
+      "incidents": "Incidents de sécurité",
+      "protection": "Niveau de protection",
+      "encryption": "Chiffrement",
+      "monitoring": "Surveillance"
+    },
+    "features": {
+      "ddos": {
+        "title": "Protection Anti-DDoS Shield",
+        "description": "Protection en temps réel contre les attaques volumétriques et les menaces réseau de niveau L4. Votre service reste disponible même sous attaque."
+      },
+      "encryption": {
+        "title": "Chiffrement de bout en bout",
+        "description": "Toutes les communications RDP sont chiffrées avec les derniers standards de sécurité. Vos données restent confidentielles."
+      },
+      "backups": {
+        "title": "Backups automatiques",
+        "description": "Sauvegardes régulières de votre environnement. En cas de problème, restaurez votre VPS en quelques clics."
+      },
+      "monitoring": {
+        "title": "Monitoring 24/7",
+        "description": "Surveillance continue de l'infrastructure. Détection et résolution proactive des problèmes avant qu'ils n'affectent votre trading."
+      }
+    }
+  },
+  "faq": {
+    "badge": "Questions fréquentes",
+    "title": "Des questions ?",
+    "titleHighlight": "On répond",
+    "subtitle": "Tout ce que vous devez savoir avant de lancer votre VPS trading.",
+    "contact": "Vous ne trouvez pas la réponse à votre question ?",
+    "contactLink": "Contactez notre support",
+    "items": {
+      "q1": {
+        "question": "Comment fonctionne un VPS pour le trading ?",
+        "answer": "Un VPS (Virtual Private Server) est un serveur virtuel qui fonctionne 24h/24, 7j/7 dans le cloud. Vous vous connectez à distance via RDP (Remote Desktop) à un bureau Windows où vous installez vos plateformes de trading. Même si votre PC est éteint, le VPS continue de faire tourner vos EAs et bots."
+      },
+      "q2": {
+        "question": "Quelle localisation dois-je choisir ?",
+        "answer": "Choisissez la localisation la plus proche des serveurs de votre broker, pas de vous. Pour la plupart des brokers Forex européens, nous recommandons Londres ou Amsterdam. Pour les brokers américains, New York est idéal. Cela minimise la latence et optimise l'exécution de vos ordres."
+      },
+      "q3": {
+        "question": "Quel plan me convient le mieux ?",
+        "answer": "Cela dépend du nombre de plateformes que vous souhaitez faire tourner : Basique (1-3 plateformes) pour les débutants, Prime (3-6 plateformes) pour les traders actifs, Pro (6-10+ plateformes) pour les professionnels. Si vous utilisez des EAs gourmands en ressources, optez pour un plan supérieur."
+      },
+      "q4": {
+        "question": "Quels moyens de paiement acceptez-vous ?",
+        "answer": "Nous acceptons Visa, Mastercard, PayPal et les cryptomonnaies (Bitcoin, Ethereum, USDT). Tous les paiements sont sécurisés et vous recevez une facture automatique à chaque transaction."
+      },
+      "q5": {
+        "question": "Qu'est-ce que la latence et pourquoi est-elle importante ?",
+        "answer": "La latence est le temps que met un signal pour aller de votre VPS au serveur de votre broker. Une latence faible (<5ms) signifie que vos ordres sont exécutés plus rapidement, ce qui est crucial pour le scalping et les EAs haute fréquence. Notre infrastructure est optimisée pour offrir une latence minimale."
+      },
+      "q6": {
+        "question": "Combien de plateformes puis-je faire tourner ?",
+        "answer": "Cela dépend de votre plan : Basique permet 1-3 plateformes, Prime 3-6 plateformes, et Pro 6-10+ plateformes. Ces chiffres sont des recommandations basées sur les ressources allouées. Vous pouvez en installer plus, mais les performances peuvent être impactées."
+      },
+      "q7": {
+        "question": "Depuis quels appareils puis-je accéder à mon VPS ?",
+        "answer": "Vous pouvez vous connecter depuis n'importe quel appareil : PC Windows, Mac, tablette iPad/Android, ou même smartphone. Il suffit d'une application RDP (gratuite) et d'une connexion internet."
+      },
+      "q8": {
+        "question": "Quelle est votre politique de remboursement ?",
+        "answer": "Nous offrons une garantie satisfait ou remboursé de 14 jours. Si vous n'êtes pas satisfait de notre service pour quelque raison que ce soit, contactez notre support et nous vous rembourserons intégralement, sans questions."
+      }
+    }
+  },
+  "cta": {
+    "title": "Prêt à trader",
+    "titleHighlight": "24/7",
+    "subtitle": "Rejoignez les +500 traders qui font confiance à STABLEVPS pour leurs opérations de trading automatisé.",
+    "primary": "Lancer mon VPS maintenant",
+    "secondary": "En savoir plus",
+    "trust": {
+      "refund": "14 jours satisfait ou remboursé",
+      "noCommitment": "Sans engagement",
+      "setup": "Installation en 5 minutes"
+    }
+  },
+  "footer": {
+    "description": "VPS haute performance pour le trading Forex. Latence ultra-faible, uptime garanti, support 24/7.",
+    "sections": {
+      "product": "Produit",
+      "support": "Support",
+      "company": "Entreprise",
+      "legal": "Légal"
+    },
+    "links": {
+      "pricing": "Tarifs",
+      "features": "Fonctionnalités",
+      "locations": "Localisations",
+      "security": "Sécurité",
+      "helpCenter": "Centre d'aide",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "status": "Status",
+      "about": "À propos",
+      "blog": "Blog",
+      "partners": "Partenaires",
+      "affiliate": "Affiliation",
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "legalNotice": "Mentions légales",
+      "gdpr": "RGPD"
+    },
+    "payments": "Paiements sécurisés :",
+    "ssl": "SSL Sécurisé",
+    "rgpdCompliant": "RGPD Compliant",
+    "copyright": "© {year} STABLEVPS. Tous droits réservés.",
+    "disclaimer": "STABLEVPS n'est pas un conseiller financier. Le trading comporte des risques."
+  },
+  "common": {
+    "learnMore": "En savoir plus"
+  },
+  "login": {
+    "heroTitle": "Accédez à votre",
+    "heroHighlight": "VPS Trading",
+    "heroSubtitle": "Gérez vos serveurs, suivez vos performances et optimisez votre trading 24/7.",
+    "features": {
+      "latency": "Latence ultra-faible < 1ms",
+      "security": "Protection Anti-DDoS avancée",
+      "locations": "6 datacenters dans le monde",
+      "support": "Support technique 24/7"
+    },
+    "trustBadge": "4.9/5 sur Trustpilot",
+    "traders": "+500 traders actifs",
+    "title": "Connexion",
+    "subtitle": "Accédez à votre espace client",
+    "or": "ou",
+    "email": "Adresse email",
+    "emailPlaceholder": "vous@exemple.com",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "signIn": "Se connecter",
+    "noAccount": "Pas encore de compte ?",
+    "signUp": "Créer un compte",
+    "securedWithSSL": "Connexion sécurisée SSL 256-bit"
+  },
+  "signup": {
+    "title": "Créez votre",
+    "titleHighlight": "VPS Trading",
+    "subtitle": "Rejoignez +500 traders qui nous font confiance pour leurs opérations de trading automatisé.",
+    "paymentCanceled": "Le paiement a été annulé. Vous pouvez réessayer.",
+    "steps": {
+      "plan": "Plan",
+      "location": "Localisation",
+      "account": "Compte"
+    },
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "popular": "POPULAIRE",
+    "platforms": "plateformes",
+    "continue": "Continuer",
+    "back": "Retour",
+    "locationHint": "Choisissez le datacenter le plus proche des serveurs de votre broker, pas de vous.",
+    "latency": "Latence",
+    "plan": "Plan",
+    "locationLabel": "Localisation",
+    "billing": "Facturation",
+    "total": "Total",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Adresse email",
+    "emailPlaceholder": "vous@exemple.com",
+    "password": "Mot de passe",
+    "passwordHint": "Minimum 8 caractères",
+    "confirmPassword": "Confirmer le mot de passe",
+    "termsAgree": "J'accepte les",
+    "terms": "conditions d'utilisation",
+    "and": "et la",
+    "privacy": "politique de confidentialité",
+    "payNow": "Payer",
+    "alreadyHaveAccount": "Déjà un compte ?",
+    "signIn": "Se connecter",
+    "securePayment": "Paiement sécurisé",
+    "moneyBackGuarantee": "14 jours satisfait ou remboursé",
+    "errors": {
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères"
+    }
+  },
+  "signupSuccess": {
+    "title": "Paiement réussi",
+    "subtitle": "Votre VPS est en cours de provisionnement. Vous recevrez vos accès par email dans quelques minutes.",
+    "nextSteps": "Prochaines étapes",
+    "step1Title": "Vérifiez vos emails",
+    "step1Desc": "Vous allez recevoir un email avec vos identifiants RDP.",
+    "step2Title": "Téléchargez un client RDP",
+    "step2Desc": "Microsoft Remote Desktop (Mac/Windows) ou Remmina (Linux).",
+    "step3Title": "Connectez-vous à votre VPS",
+    "step3Desc": "Utilisez les identifiants reçus pour accéder à votre bureau Windows.",
+    "goToDashboard": "Accéder au tableau de bord",
+    "redirecting": "Redirection dans {seconds} secondes..."
+  }
+}
+
