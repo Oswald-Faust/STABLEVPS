@@ -29,9 +29,9 @@ interface User {
 }
 
 const PLAN_SPECS = {
-  basic: { name: 'Basique', cpu: '2 vCPU', ram: '4 GB', storage: '60 GB SSD', platforms: '1-3' },
-  prime: { name: 'Prime', cpu: '4 vCPU', ram: '8 GB', storage: '120 GB SSD', platforms: '3-6' },
-  pro: { name: 'Pro', cpu: '6 vCPU', ram: '16 GB', storage: '200 GB NVMe', platforms: '6-10+' },
+  basic: { name: 'Basique', cpu: '2 vCPU', ram: '4 GB', storage: '60 GB SSD', platforms: '1-3', price: { monthly: 29, yearly: 290 } },
+  prime: { name: 'Prime', cpu: '4 vCPU', ram: '8 GB', storage: '120 GB SSD', platforms: '3-6', price: { monthly: 49, yearly: 490 } },
+  pro: { name: 'Pro', cpu: '6 vCPU', ram: '16 GB', storage: '200 GB NVMe', platforms: '6-10+', price: { monthly: 89, yearly: 890 } },
 };
 
 const LOCATIONS = {
@@ -435,7 +435,7 @@ export default function DashboardPage() {
                   <div className="p-6 bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/20 rounded-2xl">
                     <p className="text-green-400 font-medium mb-2">{planSpec?.name || 'Plan'}</p>
                     <p className="text-4xl font-bold text-white mb-4">
-                      {user.subscription?.billingCycle === 'monthly' ? '49€' : '490€'}
+                      {planSpec?.price[user.subscription?.billingCycle || 'monthly']}€
                       <span className="text-lg text-gray-400 font-normal">
                         /{user.subscription?.billingCycle === 'monthly' ? t('billing.month') : t('billing.year')}
                       </span>
@@ -506,7 +506,7 @@ export default function DashboardPage() {
                     <tr className="border-t border-gray-800">
                       <td className="py-3">{new Date().toLocaleDateString()}</td>
                       <td className="py-3">{planSpec?.name} VPS - {user.subscription?.billingCycle}</td>
-                      <td className="py-3">{user.subscription?.billingCycle === 'monthly' ? '49€' : '490€'}</td>
+                      <td className="py-3">{planSpec?.price[user.subscription?.billingCycle || 'monthly']}€</td>
                       <td className="py-3">
                         <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
                           {t('billing.paid')}
