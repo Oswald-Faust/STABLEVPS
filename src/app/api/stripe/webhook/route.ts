@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
             'subscription.status': subscription.status === 'active' ? 'active' : 
                                    subscription.status === 'past_due' ? 'past_due' : 
                                    subscription.status === 'canceled' ? 'canceled' : 'pending',
-            'subscription.currentPeriodStart': new Date(subscription.current_period_start * 1000),
-            'subscription.currentPeriodEnd': new Date(subscription.current_period_end * 1000),
+            'subscription.currentPeriodStart': new Date((subscription as unknown as { current_period_start: number }).current_period_start * 1000),
+            'subscription.currentPeriodEnd': new Date((subscription as unknown as { current_period_end: number }).current_period_end * 1000),
           });
           
           console.log(`📝 Subscription updated for user ${userId}`);

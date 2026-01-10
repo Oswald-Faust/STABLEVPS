@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
 export default function SignupSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-black text-white">Loading...</div>}>
+      <SignupSuccessContent />
+    </Suspense>
+  );
+}
+
+function SignupSuccessContent() {
   const t = useTranslations('signupSuccess');
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
