@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check subscription status
-    if (user.subscription?.status === 'pending') {
+    // In development, we allow pending users to login to facilitate testing without webhooks
+    if (user.subscription?.status === 'pending' && process.env.NODE_ENV !== 'development') {
       return NextResponse.json(
         { error: 'Please complete your payment to access your account' },
         { status: 402 }
