@@ -6,7 +6,7 @@ export async function GET() {
   await dbConnect();
   
   const user = await User.findOneAndUpdate(
-    { email: 'test.dashboard@example.com' },
+    { email: 'faustfrank@gmail.com' },
     { role: 'admin' },
     { new: true }
   );

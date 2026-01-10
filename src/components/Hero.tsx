@@ -4,11 +4,12 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-export default function Hero() {
+export default function Hero({ isLoggedIn }: { isLoggedIn?: boolean }) {
   const t = useTranslations('hero');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // ... existing canvas logic
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -150,15 +151,26 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <Link href="#pricing" className="btn-primary text-lg px-8 py-4">
-              {t('cta')}
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-            <Link href="#how-it-works" className="btn-secondary text-lg px-8 py-4">
-              {t('ctaSecondary')}
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="btn-primary text-lg px-8 py-4">
+                Mon compte
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </Link>
+            ) : (
+              <>
+                <Link href="#pricing" className="btn-primary text-lg px-8 py-4">
+                  {t('cta')}
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+                <Link href="#how-it-works" className="btn-secondary text-lg px-8 py-4">
+                  {t('ctaSecondary')}
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Trust Badges */}

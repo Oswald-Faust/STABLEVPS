@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 
-export default function Header() {
+// ... imports
+
+export default function Header({ isLoggedIn }: { isLoggedIn?: boolean }) {
   const t = useTranslations('header');
   const tPromo = useTranslations('promo');
   const locale = useLocale();
@@ -127,15 +129,26 @@ export default function Header() {
                 )}
               </div>
 
-              <Link href="/login" className="text-gray-300 hover:text-white transition-colors font-medium">
-                {t('login')}
-              </Link>
-              <Link href="#pricing" className="btn-primary">
-                {t('start')}
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard" className="btn-primary">
+                  Mon compte
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="text-gray-300 hover:text-white transition-colors font-medium">
+                    {t('login')}
+                  </Link>
+                  <Link href="#pricing" className="btn-primary">
+                    {t('start')}
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -195,12 +208,20 @@ export default function Header() {
                 ))}
               </div>
               
-              <Link href="/login" className="text-gray-300 hover:text-white transition-colors font-medium py-2">
-                {t('login')}
-              </Link>
-              <Link href="#pricing" className="btn-primary justify-center mt-2">
-                {t('start')}
-              </Link>
+              {isLoggedIn ? (
+                 <Link href="/dashboard" className="btn-primary justify-center mt-2">
+                   Mon compte
+                 </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="text-gray-300 hover:text-white transition-colors font-medium py-2">
+                    {t('login')}
+                  </Link>
+                  <Link href="#pricing" className="btn-primary justify-center mt-2">
+                    {t('start')}
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}

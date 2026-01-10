@@ -1,4 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import HowItWorks from '@/components/HowItWorks';
@@ -14,10 +15,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth_token');
+  const isLoggedIn = !!token;
+
   return (
     <main className="min-h-screen bg-black">
-      <Header />
-      <Hero />
+      <Header isLoggedIn={isLoggedIn} />
+      <Hero isLoggedIn={isLoggedIn} />
       <HowItWorks />
       <Features />
       <Pricing />
