@@ -388,16 +388,78 @@
   },
   "signupSuccess": {
     "title": "Payment successful",
-    "subtitle": "Your VPS is being provisioned. You will receive your credentials by email in a few minutes.",
+    "subtitle": "Your VPS is being provisioned. Your credentials are available on your dashboard.",
     "nextSteps": "Next steps",
-    "step1Title": "Check your emails",
-    "step1Desc": "You will receive an email with your RDP credentials.",
+    "step1Title": "Go to dashboard",
+    "step1Desc": "Find your RDP login credentials in the 'My VPS' tab.",
     "step2Title": "Download an RDP client",
     "step2Desc": "Microsoft Remote Desktop (Mac/Windows) or Remmina (Linux).",
     "step3Title": "Connect to your VPS",
-    "step3Desc": "Use the received credentials to access your Windows desktop.",
+    "step3Desc": "Use the credentials to access your Windows desktop.",
     "goToDashboard": "Go to dashboard",
     "redirecting": "Redirecting in {seconds} seconds..."
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "welcomeSubtitle": "Here's an overview of your VPS and subscription.",
+    "logout": "Logout",
+    "tabs": {
+      "overview": "Overview",
+      "vps": "My VPS",
+      "billing": "Billing"
+    },
+    "stats": {
+      "vpsStatus": "VPS Status",
+      "currentPlan": "Current Plan",
+      "location": "Location",
+      "uptime": "Uptime"
+    },
+    "status": {
+      "online": "Online",
+      "provisioning": "Provisioning",
+      "offline": "Offline"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "rdp": "RDP Connect",
+      "restart": "Restart",
+      "backup": "Backup",
+      "support": "Support"
+    },
+    "vps": {
+      "title": "VPS Information",
+      "ip": "IP Address",
+      "username": "RDP Username",
+      "password": "Password",
+      "location": "Location",
+      "specs": "Specifications",
+      "storage": "Storage",
+      "platforms": "Platforms",
+      "howToConnect": "How to connect?",
+      "step1Title": "Download an RDP client",
+      "step1Desc": "Microsoft Remote Desktop for Mac/Windows or Remmina for Linux.",
+      "step2Title": "Enter credentials",
+      "step2Desc": "Use the IP address, username and password above.",
+      "step3Title": "Connect",
+      "step3Desc": "Install your trading platforms and start trading 24/7."
+    },
+    "billing": {
+      "currentPlan": "Current Plan",
+      "active": "Active",
+      "pending": "Pending",
+      "month": "month",
+      "year": "year",
+      "platforms": "platforms",
+      "nextPayment": "Next payment",
+      "paymentMethod": "Payment method",
+      "upgrade": "Change plan",
+      "manageBilling": "Manage billing",
+      "history": "Payment history",
+      "date": "Date",
+      "description": "Description",
+      "amount": "Amount",
+      "status": "Status",
+      "paid": "Paid"
+    }
   }
 }
-
