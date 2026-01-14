@@ -103,7 +103,7 @@ function SignupContent() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden dark text-white">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-950 to-black" />
       <div className="absolute inset-0 grid-pattern opacity-20" />

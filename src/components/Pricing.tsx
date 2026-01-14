@@ -24,7 +24,7 @@ export default function Pricing() {
       featured: false
     },
     {
-      key: 'prime',
+      key: 'pro',
       monthlyPrice: 49,
       yearlyPrice: 490,
       platforms: "3-6",
@@ -38,7 +38,7 @@ export default function Pricing() {
       featured: true
     },
     {
-      key: 'pro',
+      key: 'prime',
       monthlyPrice: 89,
       yearlyPrice: 890,
       platforms: "6-10+",

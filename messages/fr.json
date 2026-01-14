@@ -145,12 +145,12 @@
       },
       "prime": {
         "name": "Prime",
-        "description": "Le plus populaire",
-        "popular": "POPULAIRE"
+        "description": "Pour les traders sérieux"
       },
       "pro": {
         "name": "Pro",
-        "description": "Pour les traders sérieux"
+        "description": "Le plus populaire",
+        "popular": "POPULAIRE"
       }
     },
     "features": {

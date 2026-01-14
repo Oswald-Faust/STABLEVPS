@@ -1,19 +1,36 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
-:root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --accent: #22c55e;
-  --accent-hover: #16a34a;
-  --accent-glow: rgba(34, 197, 94, 0.3);
-  --card-bg: rgba(17, 24, 39, 0.7);
-  --card-border: rgba(34, 197, 94, 0.2);
-  --text-muted: #9ca3af;
+@layer base {
+  :root {
+    --background: #f9fafb; /* Gray-50ish for better contrast */
+    --foreground: #111827;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --card-border: rgba(229, 231, 235, 0.8);
+    --text-muted: #6b7280;
+    --accent: #22c55e;
+    --accent-hover: #16a34a;
+    --accent-glow: rgba(34, 197, 94, 0.3);
+  }
+
+  .dark {
+    --background: #000000;
+    --foreground: #ffffff;
+    --card-bg: rgba(17, 24, 39, 0.7);
+    --card-border: rgba(34, 197, 94, 0.2);
+    --text-muted: #9ca3af;
+    --accent: #22c55e;
+    --accent-hover: #16a34a;
+    --accent-glow: rgba(34, 197, 94, 0.3);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--text-muted);
   --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -32,6 +49,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Scrollbar */
@@ -40,11 +58,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #111827;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22c55e;
+  background: var(--accent);
   border-radius: 4px;
 }
 
@@ -122,15 +140,15 @@ body {
 
 /* Glass morphism card */
 .glass-card {
-  background: rgba(17, 24, 39, 0.6);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(34, 197, 94, 0.15);
+  border: 1px solid var(--card-border);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(34, 197, 94, 0.4);
-  box-shadow: 0 0 30px rgba(34, 197, 94, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow);
   transform: translateY(-5px);
 }
 

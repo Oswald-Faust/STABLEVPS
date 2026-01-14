@@ -1,11 +1,23 @@
 import "./globals.css";
+import { Inter } from "next/font/google";
 
-// Root layout - ne contient que le strict minimum
-// Le layout principal est dans [locale]/layout.tsx
+const inter = Inter({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+// Root layout - must contain html/body for Next.js App Router
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <html lang="fr" suppressHydrationWarning>
+      <body className={`${inter.variable} antialiased`}>{children}</body>
+    </html>
+  );
 }
+
+

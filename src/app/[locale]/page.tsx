@@ -20,7 +20,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const isLoggedIn = !!token;
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-black dark text-white">
       <Header isLoggedIn={isLoggedIn} />
       <Hero isLoggedIn={isLoggedIn} />
       <HowItWorks />

@@ -21,9 +21,16 @@ export async function GET() {
     // Fetch all users sorted by creation date
     const users = await User.find({})
       .select('-password') // Exclude password
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
-    return NextResponse.json({ success: true, users });
+    const serializedUsers = users.map(user => ({
+      ...user,
+      _id: user._id.toString(),
+      subscription: user.subscription, // Ensure nested objects are preserved
+    }));
+
+    return NextResponse.json({ success: true, users: serializedUsers });
 
   } catch (error) {
     console.error('Admin users error:', error);
