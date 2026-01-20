@@ -6,7 +6,7 @@ import User from '@/models/User';
 import Transaction from '@/models/Transaction';
 import Invoice from '@/models/Invoice';
 import { stripe } from '@/lib/stripe';
-import { createWindowsVPS } from '@/lib/vultr';
+import { createForexVPS } from '@/lib/vps-provider';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -131,28 +131,31 @@ export async function POST(request: NextRequest) {
                  }
                }
 
-               // Trigger Vultr Provisioning
+               // Trigger Cloudzy Provisioning
                let vpsId = '';
+               let vpsPassword = '';
                // For dev mode/safety
-               let vpsStatus = 'provisioning';
+               const vpsStatus = 'provisioning';
 
                try {
                  const user = await User.findById(userId);
                  if (user) {
                     const label = `vps-${user.firstName}-${user.lastName}-${Date.now()}`;
-                    const vps = await createWindowsVPS(planId, label);
-                    vpsId = vps.id;
+                    const vps = await createForexVPS(planId, label, location);
+                    vpsId = vps.instanceId;
+                    // Note: Cloudzy provides password only after VPS is active
                     console.log('✅ VPS Provisioning started:', vpsId);
                  }
                } catch (vpsError) {
                  console.error('❌ Failed to provision VPS during webhook (continuing with mock/empty):', vpsError);
                   if (process.env.NODE_ENV !== 'production') {
                     vpsId = `mock-vps-${Date.now()}`;
+                    vpsPassword = `DevPass${Date.now().toString(36)}!`;
                     console.log('⚠️ Development mode: Using mock VPS ID');
                   }
                }
 
-               // Create new Service object
+               // Create new Service object with password
                const newService = {
                   planId,
                   billingCycle: session.metadata?.billingCycle || 'monthly',
@@ -163,6 +166,8 @@ export async function POST(request: NextRequest) {
                   serverId: vpsId,
                   location,
                   vpsStatus: vpsStatus,
+                  rdpUsername: 'Administrator',
+                  rdpPassword: vpsPassword,
                   createdAt: new Date(),
                };
 

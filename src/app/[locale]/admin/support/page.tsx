@@ -7,7 +7,9 @@ import {
   User as UserIcon,
   Send,
   ArrowLeft,
-  Search
+  Search,
+  XCircle,
+  Loader2
 } from 'lucide-react';
 import { useAdmin } from '../layout';
 
@@ -45,6 +47,7 @@ export default function AdminSupport() {
   const [adminReply, setAdminReply] = useState('');
   const [isSendingReply, setIsSendingReply] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCancelling, setIsCancelling] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -122,6 +125,68 @@ export default function AdminSupport() {
       }
     } catch (error) {
       console.error('Failed to update status', error);
+    }
+  };
+
+  // Extract cancellation info from ticket messages
+  const getCancellationInfo = (ticket: TicketDetail | null) => {
+    if (!ticket) return null;
+    const isCancellationTicket = ticket.subject.toLowerCase().includes("annulation");
+    if (!isCancellationTicket) return null;
+
+    // Try to extract service ID and user ID from the first message
+    const firstMessage = ticket.messages[0]?.content || '';
+    const serviceIdMatch = firstMessage.match(/Service ID \(DB\) : ([a-f0-9]+)/i);
+    const serviceId = serviceIdMatch?.[1] || null;
+
+    return {
+      isCancellation: true,
+      serviceId,
+      userId: ticket.user?.id,
+    };
+  };
+
+  const handleApproveCancellation = async () => {
+    if (!selectedTicket) return;
+    
+    const cancellationInfo = getCancellationInfo(selectedTicket);
+    if (!cancellationInfo?.serviceId || !cancellationInfo?.userId) {
+      alert('Impossible d\'extraire les informations de service du ticket. Veuillez annuler manuellement.');
+      return;
+    }
+
+    if (!confirm(`⚠️ ATTENTION: Cette action va:\n\n• Annuler l'abonnement Stripe\n• Supprimer le VPS sur Cloudzy\n• Mettre à jour la base de données\n• Fermer ce ticket\n\nContinuer ?`)) {
+      return;
+    }
+
+    setIsCancelling(true);
+    try {
+      const res = await fetch('/api/admin/cancel-service', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: cancellationInfo.userId,
+          serviceId: cancellationInfo.serviceId,
+          ticketId: selectedTicket.id,
+          reason: 'Demande approuvée par l\'administrateur.'
+        })
+      });
+
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        alert(`✅ Annulation traitée avec succès!\n\nStripe: ${data.results.stripeCancel ? '✅' : '⚠️'}\nCloudzy: ${data.results.cloudzyDelete ? '✅' : '⚠️'}\nBDD: ${data.results.databaseUpdate ? '✅' : '❌'}`);
+        await fetchTicketDetail(selectedTicket.id);
+        await fetchTickets();
+        await refreshStats();
+      } else {
+        alert(`❌ Erreur: ${data.error || 'Erreur inconnue'}`);
+      }
+    } catch (error) {
+      console.error('Failed to process cancellation', error);
+      alert('❌ Erreur lors du traitement de l\'annulation');
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -222,6 +287,21 @@ export default function AdminSupport() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {/* Bouton Approuver Annulation - visible uniquement pour les tickets d'annulation */}
+                  {getCancellationInfo(selectedTicket)?.isCancellation && selectedTicket.status !== 'closed' && (
+                    <button
+                      onClick={handleApproveCancellation}
+                      disabled={isCancelling}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-red-500/20"
+                    >
+                      {isCancelling ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <XCircle className="w-4 h-4" />
+                      )}
+                      {isCancelling ? 'Traitement...' : 'Approuver Annulation'}
+                    </button>
+                  )}
                   <select 
                     value={selectedTicket.status}
                     onChange={(e) => updateTicketStatus(selectedTicket.id, e.target.value)}

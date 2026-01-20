@@ -5,7 +5,7 @@ import Invoice from '@/models/Invoice';
 import { getCurrentUser } from '@/lib/auth';
 import { stripe } from '@/lib/stripe';
 import { PLANS, PlanId, BillingCycle, getPlanPrice } from '@/lib/plans';
-import { createWindowsVPS } from '@/lib/vultr';
+import { createForexVPS } from '@/lib/vps-provider';
 
 export async function POST(request: NextRequest) {
   try {
@@ -61,10 +61,14 @@ export async function POST(request: NextRequest) {
 
       // Create VPS (non-blocking in dev mode)
       let vpsId = `mock-vps-${Date.now()}`;
+      let vpsPassword = ''; // Password will be retrieved when VPS is active
+      
       try {
         const label = `vps-${user.firstName}-${user.lastName}-${Date.now()}`;
-        const vps = await createWindowsVPS(planId as PlanId, label);
-        vpsId = vps.id;
+        const vps = await createForexVPS(planId as PlanId, label, location);
+        vpsId = vps.instanceId;
+        // Note: Cloudzy provides password only after VPS is active
+        // Password will be retrieved during status polling
         console.log('✅ VPS Provisioning started:', vpsId);
       } catch (vpsError) {
         console.error('❌ Failed to provision VPS (continuing with mock):', vpsError);
@@ -76,7 +80,8 @@ export async function POST(request: NextRequest) {
           }, { status: 500 });
         }
         // Dev mode: continue with mock VPS
-        console.log('⚠️ Development mode: Using mock VPS ID');
+        vpsPassword = `DevPass${Date.now().toString(36)}!`;
+        console.log('⚠️ Development mode: Using mock VPS ID and password');
       }
 
       // Calculate period dates
@@ -88,7 +93,7 @@ export async function POST(request: NextRequest) {
         currentPeriodEnd.setFullYear(currentPeriodEnd.getFullYear() + 1);
       }
 
-      // Create new VPS service object
+      // Create new VPS service object with password
       const newService = {
         planId,
         billingCycle,
@@ -98,6 +103,8 @@ export async function POST(request: NextRequest) {
         serverId: vpsId,
         location,
         vpsStatus: 'provisioning',
+        rdpUsername: 'Administrator',
+        rdpPassword: vpsPassword, // Store the password!
         createdAt: new Date(),
       };
 

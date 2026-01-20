@@ -89,8 +89,17 @@ export function AdminSidebar({ openTickets, handleLogout }: AdminSidebarProps) {
 }
 
 function SidebarNavItem({ href, active, icon, label, badge }: { href: string, active: boolean, icon: React.ReactNode, label: string, badge?: number }) {
-  const locale = usePathname().split('/')[1];
-  const fullHref = `/${locale}${href}`;
+  const pathname = usePathname();
+  const segments = pathname.split('/');
+  const firstSegment = segments[1];
+  
+  // Check if the first segment is a valid locale (fr or en)
+  // If not (e.g., 'admin'), we're using the default locale without prefix
+  const validLocales = ['fr', 'en'];
+  const hasLocalePrefix = validLocales.includes(firstSegment);
+  
+  // Build the full href: with locale prefix if present, without if using default locale
+  const fullHref = hasLocalePrefix ? `/${firstSegment}${href}` : href;
 
   return (
     <Link 

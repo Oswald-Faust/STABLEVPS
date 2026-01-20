@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { getCurrentUser } from '@/lib/auth';
-import { getVPSDetails } from '@/lib/vultr';
+import { getVPSDetails } from '@/lib/vps-provider';
 
 export async function GET() {
   try {
@@ -30,22 +30,22 @@ export async function GET() {
     if (user.vps?.status === 'provisioning' && user.vps?.serverId) {
        try {
          const vpsDetails = await getVPSDetails(user.vps.serverId);
-         if (vpsDetails && vpsDetails.default_password) {
-            console.log('✅ VPS Provisioning finished. password received.');
+         // Cloudzy uses 'active' status
+         if (vpsDetails && vpsDetails.status === 'active' && vpsDetails.ipv4) {
+            console.log('✅ VPS Provisioning finished.');
             
             // Update User DB
              await User.findByIdAndUpdate(user._id, {
                'vps.status': 'active',
-               'vps.ipAddress': vpsDetails.main_ip,
-               'vps.rdpUsername': 'Administrator', // Standard for Windows
-               'vps.rdpPassword': vpsDetails.default_password,
+               'vps.ipAddress': vpsDetails.ipv4,
+               'vps.rdpUsername': vpsDetails.username || 'Administrator',
+               'vps.rdpPassword': vpsDetails.password || user.vps.rdpPassword || 'Pending...',
              });
 
             // Update local user object for response
             user.vps.status = 'active';
-            user.vps.ipAddress = vpsDetails.main_ip;
-            user.vps.rdpUsername = 'Administrator';
-            user.vps.rdpPassword = vpsDetails.default_password;
+            user.vps.ipAddress = vpsDetails.ipv4;
+            user.vps.rdpUsername = vpsDetails.username || 'Administrator';
          }
        } catch (err) {
          console.error('Failed to check VPS status', err);
@@ -59,7 +59,10 @@ export async function GET() {
         if (service.vpsStatus === 'provisioning' && service.serverId) {
           try {
             const vpsDetails = await getVPSDetails(service.serverId);
-            if (vpsDetails && vpsDetails.default_password) {
+            // Cloudzy uses 'active' status
+            const isReady = vpsDetails && vpsDetails.status === 'active' && vpsDetails.ipv4;
+            
+            if (isReady) {
               console.log(`✅ Service ${i} VPS Provisioning finished.`);
               
               // Update in database
@@ -68,18 +71,18 @@ export async function GET() {
                 { 
                   $set: {
                     'services.$.vpsStatus': 'active',
-                    'services.$.ipAddress': vpsDetails.main_ip,
-                    'services.$.rdpUsername': 'Administrator',
-                    'services.$.rdpPassword': vpsDetails.default_password,
+                    'services.$.ipAddress': vpsDetails.ipv4,
+                    'services.$.rdpUsername': vpsDetails.username || 'Administrator',
+                    'services.$.rdpPassword': vpsDetails.password || 'Pending...',
                   }
                 }
               );
 
               // Update local for response
               service.vpsStatus = 'active';
-              service.ipAddress = vpsDetails.main_ip;
-              service.rdpUsername = 'Administrator';
-              service.rdpPassword = vpsDetails.default_password;
+              service.ipAddress = vpsDetails.ipv4;
+              service.rdpUsername = vpsDetails.username || 'Administrator';
+              service.rdpPassword = vpsDetails.password || 'Pending...';
             }
           } catch (err) {
             console.error(`Failed to check VPS status for service ${i}`, err);
