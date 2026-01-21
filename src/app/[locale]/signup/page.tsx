@@ -10,9 +10,9 @@ type BillingCycle = 'monthly' | 'yearly';
 type Location = 'london' | 'amsterdam' | 'frankfurt' | 'newYork' | 'singapore' | 'tokyo';
 
 const PLANS = {
-  basic: { monthlyPrice: 29, yearlyPrice: 290, platforms: '1-3', cpu: '2 vCPU', ram: '4 GB', storage: '60 GB SSD' },
-  prime: { monthlyPrice: 49, yearlyPrice: 490, platforms: '3-6', cpu: '4 vCPU', ram: '8 GB', storage: '120 GB SSD' },
-  pro: { monthlyPrice: 89, yearlyPrice: 890, platforms: '6-10+', cpu: '6 vCPU', ram: '16 GB', storage: '200 GB NVMe' },
+  basic: { monthlyPrice: 12.49, yearlyPrice: 124.90, platforms: '1-2', cpu: '1 vCPU', ram: '2.5 GB', storage: '17 GB NVMe' },
+  prime: { monthlyPrice: 19.49, yearlyPrice: 194.90, platforms: '2-4', cpu: '2 vCPU', ram: '4 GB', storage: '35 GB NVMe' },
+  pro: { monthlyPrice: 34.49, yearlyPrice: 344.90, platforms: '4-8+', cpu: '4 vCPU', ram: '8 GB', storage: '65 GB NVMe' },
 };
 
 const LOCATIONS = [

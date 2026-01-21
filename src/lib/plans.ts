@@ -1,42 +1,43 @@
 // Plan configuration - Can be imported by both client and server components
+// Prices are in EUR, matching Zomro Cloud Forex plans with margin
 export const PLANS = {
   basic: {
     id: 'basic',
-    name: 'Basique',
-    monthlyPrice: 29,
-    yearlyPrice: 290,
-    platforms: '1-3',
+    name: 'Starter',
+    monthlyPrice: 12.49,
+    yearlyPrice: 124.90, // ~2 months free
+    platforms: '1-2',
     specs: {
-      cpu: '2 vCPU',
-      ram: '4 GB',
-      storage: '60 GB SSD',
-      os: 'Windows Server'
+      cpu: '1 vCPU',
+      ram: '2.5 GB',
+      storage: '17 GB NVMe',
+      os: 'Windows Server 2022'
     }
   },
   prime: {
     id: 'prime',
-    name: 'Prime',
-    monthlyPrice: 49,
-    yearlyPrice: 490,
-    platforms: '3-6',
+    name: 'Professional',
+    monthlyPrice: 19.49,
+    yearlyPrice: 194.90, // ~2 months free
+    platforms: '2-4',
     specs: {
-      cpu: '4 vCPU',
-      ram: '8 GB',
-      storage: '120 GB SSD',
-      os: 'Windows Server'
+      cpu: '2 vCPU',
+      ram: '4 GB',
+      storage: '35 GB NVMe',
+      os: 'Windows Server 2022'
     }
   },
   pro: {
     id: 'pro',
-    name: 'Pro',
-    monthlyPrice: 89,
-    yearlyPrice: 890,
-    platforms: '6-10+',
+    name: 'Enterprise',
+    monthlyPrice: 34.49,
+    yearlyPrice: 344.90, // ~2 months free
+    platforms: '4-8+',
     specs: {
-      cpu: '6 vCPU',
-      ram: '16 GB',
-      storage: '200 GB NVMe',
-      os: 'Windows Server'
+      cpu: '4 vCPU',
+      ram: '8 GB',
+      storage: '65 GB NVMe',
+      os: 'Windows Server 2022'
     }
   }
 } as const;

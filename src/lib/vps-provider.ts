@@ -12,7 +12,7 @@
  * Default: Zomro (Windows + MT5 pre-installed = best for Forex traders)
  * 
  * Provider Comparison:
- * - Zomro: €6.48/mo, MT5 pre-installed, Windows ready → RECOMMENDED
+ * - Zomro: €12.49/mo (retail), MT5 pre-installed, Windows ready → RECOMMENDED
  * - Aeza: €4.94/mo, Ryzen 9 power, manual MT5 install
  * - Cloudzy: $29/mo, MT5 pre-installed, expensive
  */
@@ -83,7 +83,7 @@ export function getProviderConfig(provider?: VPSProvider) {
   return {
     name: 'Zomro',
     apiTokenEnvVar: 'ZOMRO_API_TOKEN',
-    planMapping: Zomro.PLAN_MAPPING,
+    planMapping: Zomro.ZOMRO_PLANS,
     regionMapping: Zomro.REGION_MAPPING,
     defaultRegion: 'amsterdam',
     features: ['Windows + MT5 pre-installed', 'Cloud Forex optimized', 'TIER III datacenter'],

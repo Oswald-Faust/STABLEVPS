@@ -1,30 +1,21 @@
 /**
- * Zomro API Client
+ * Zomro API Client - BillManager Native API
  * 
- * Zomro provides Cloud Forex VPS with Windows + MetaTrader pre-installed.
- * This is the KEY advantage over Aeza - clients get a ready-to-trade VPS.
- * 
- * Required environment variables:
- * - ZOMRO_USER (Your Zomro email/username)
- * - ZOMRO_PASSWORD (Your Zomro password)
- * 
- * Zomro uses session-based authentication. This client automatically
- * handles login and session token management.
- * 
- * @see https://zomro.com/docs/api/ for API documentation
+ * Uses the native BillManager API at /billmgr endpoint
+ * Key discovery: skipbasket=on forces immediate payment from account balance
  */
 
-const ZOMRO_API_URL = 'https://api.zomro.com/';
+const ZOMRO_API_URL = 'https://api.zomro.com/billmgr';
 
-// Cache for the session token
+// Flag to enable mock mode for development/testing when API is blocked
+const USE_ZOMRO_MOCK = process.env.USE_ZOMRO_MOCK === 'true';
+
+// Session token cache
 let cachedToken: string | null = null;
 let tokenExpiry: number = 0;
 
-/**
- * Plan Mapping: Our plan IDs to Zomro Cloud Forex pricelist IDs
- * ... existing mapping ...
- */
-export const PLAN_MAPPING: Record<string, {
+// Cloud Forex Plan IDs (discovered via pricelist.export)
+export const ZOMRO_PLANS: Record<string, {
   pricelistId: number;
   name: string;
   cpu: number;
@@ -32,29 +23,24 @@ export const PLAN_MAPPING: Record<string, {
   terminals: number;
   priceEUR: number;
 }> = {
-  // Basic: Cloud Forex 1 - 2 vCPU, 1GB RAM, 2 terminals
   basic: {
-    pricelistId: 0, // Will be discovered from API
+    pricelistId: 7991, // Cloud Forex 1 | NL-3
     name: 'Cloud Forex 1',
     cpu: 2,
     ram: 1,
     terminals: 2,
     priceEUR: 6.48,
   },
-
-  // Prime: Cloud Forex 2 - 3 vCPU, 2GB RAM, 3 terminals
   prime: {
-    pricelistId: 0, // Will be discovered from API
+    pricelistId: 7962, // Cloud Forex 2 | NL-3
     name: 'Cloud Forex 2',
     cpu: 3,
     ram: 2,
     terminals: 3,
     priceEUR: 11.48,
   },
-
-  // Pro: Cloud Forex 3 - 4 vCPU, 3GB RAM, 4 terminals
   pro: {
-    pricelistId: 0, // Will be discovered from API
+    pricelistId: 7998, // Cloud Forex 3 | NL-3
     name: 'Cloud Forex 3',
     cpu: 4,
     ram: 3,
@@ -63,52 +49,32 @@ export const PLAN_MAPPING: Record<string, {
   },
 };
 
-/**
- * Region mapping: Our location IDs to Zomro datacenter IDs
- */
 export const REGION_MAPPING: Record<string, string> = {
   london: 'nl',
   frankfurt: 'nl',
   amsterdam: 'nl',
-  newyork: 'us',
-  singapore: 'sg',
+  newyork: 'pl',
+  singapore: 'de',
   poland: 'pl',
 };
 
-// Cache for discovered pricelist IDs
-let pricelistCache: Array<{
-  id: number;
-  name: string;
-  price: number;
-}> | null = null;
-
 /**
- * Authenticate with Zomro to get a session token
- * Using the method provided by Zomro support:
- * func=auth, authinfo=user:pass
+ * Authenticate with Zomro BillManager API
  */
 async function authenticate(): Promise<string> {
   const user = process.env.ZOMRO_USER;
   const pass = process.env.ZOMRO_PASSWORD;
 
   if (!user || !pass) {
-    throw new Error('Missing ZOMRO_USER or ZOMRO_PASSWORD environment variables.');
+    throw new Error('Missing ZOMRO_USER or ZOMRO_PASSWORD');
   }
 
-  console.log('🔑 Authenticating with Zomro API...');
-  console.log('📧 User:', user);
-  console.log('🔐 Pass:', pass);
+  console.log('🔑 Authenticating with Zomro BillManager...');
 
-  // Build form data manually to match curl format exactly
-  // The authinfo value needs to be URL-encoded as a whole
-  const authinfo = `${user}:${pass}`;
-  
   const body = new URLSearchParams();
   body.append('func', 'auth');
-  body.append('authinfo', authinfo);
+  body.append('authinfo', `${user}:${pass}`);
   body.append('out', 'json');
-
-  console.log('📦 Body:', body.toString());
 
   const response = await fetch(ZOMRO_API_URL, {
     method: 'POST',
@@ -116,43 +82,28 @@ async function authenticate(): Promise<string> {
     body: body.toString(),
   });
 
-  const text = await response.text();
-  console.log('📥 Auth response:', text.substring(0, 200));
-  
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    console.error('❌ Non-JSON response:', text);
-    throw new Error('Zomro returned non-JSON response');
-  }
-
-  // Extract token from doc.auth.$id or doc.auth.$
+  const data = await response.json();
   const token = data?.doc?.auth?.['$id'] || data?.doc?.auth?.['$'];
 
   if (!token) {
-    console.error('❌ Zomro authentication failed:', JSON.stringify(data, null, 2));
+    console.error('❌ Auth failed:', JSON.stringify(data));
     throw new Error('Failed to get Zomro session token');
   }
 
   cachedToken = token;
-  // Tokens usually valid for 1 hour, let's refresh every 45 mins
   tokenExpiry = Date.now() + 45 * 60 * 1000;
-  
-  console.log('✅ Zomro session token acquired');
+  console.log('✅ Zomro authenticated');
   return token;
 }
 
 /**
- * Make an authenticated request to Zomro API
+ * Make authenticated BillManager API request
  */
 async function zomroRequest(
   func: string,
   params: Record<string, string | number> = {},
-  isRetry: boolean = false
+  isRetry = false
 ): Promise<Record<string, unknown>> {
-  
-  // Get token if not cached or expired
   if (!cachedToken || Date.now() > tokenExpiry) {
     await authenticate();
   }
@@ -166,7 +117,7 @@ async function zomroRequest(
     formData.append(key, String(value));
   }
 
-  console.log(`🌐 Zomro API: ${func}`);
+  console.log(`🌐 Zomro API: ${func}`, params);
 
   const response = await fetch(ZOMRO_API_URL, {
     method: 'POST',
@@ -174,254 +125,232 @@ async function zomroRequest(
     body: formData.toString(),
   });
 
-  const text = await response.text();
-  let data: Record<string, unknown>;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error(`Zomro API error: Non-JSON response - ${text.substring(0, 100)}`);
-  }
+  const data = await response.json();
 
-  // Handle errors
-  if (data.doc && (data.doc as Record<string, unknown>).error) {
-    const error = (data.doc as Record<string, unknown>).error as { code?: string; msg?: string };
+  // Check for errors
+  if (data.doc?.error) {
+    const error = data.doc.error;
     
-    // If session expired, retry once
-    if (error.code === 'auth' && !isRetry) {
-      console.warn('⚠️ Zomro session expired, re-authenticating...');
+    // Retry on auth error
+    if (error['$type'] === 'auth' && !isRetry) {
+      console.warn('⚠️ Session expired, re-authenticating...');
       cachedToken = null;
       return zomroRequest(func, params, true);
     }
 
-    console.error(`❌ Zomro API error (${func}):`, error);
-    throw new Error(`Zomro API error: ${error.msg || JSON.stringify(error)}`);
+    console.error(`❌ API Error (${func}):`, error);
+    throw new Error(`Zomro API: ${error.msg?.['$'] || JSON.stringify(error)}`);
   }
 
   return data;
 }
 
 /**
- * Get available Cloud Forex plans from Zomro
- * This fetches the pricelist and caches it
- */
-export async function fetchPricelist(): Promise<Array<{
-  id: number;
-  name: string;
-  price: number;
-}>> {
-  if (pricelistCache) {
-    return pricelistCache;
-  }
-
-  try {
-    const response = await zomroRequest('v2.instances.order.pricelist');
-
-    // Parse the response - Zomro returns data in 'doc' element
-    const doc = response.doc as Record<string, unknown>;
-    const items = (doc.elem as Array<Record<string, unknown>>) || [];
-
-    pricelistCache = items.map(item => ({
-      id: parseInt(String(item.id), 10),
-      name: String(item.name || ''),
-      price: parseFloat(String(item.cost || '0')),
-    }));
-
-    console.log(`📦 Found ${pricelistCache.length} Zomro plans`);
-
-    // Match our plans to Zomro plans
-    for (const plan of pricelistCache) {
-      const planNameLower = plan.name.toLowerCase();
-
-      if (planNameLower.includes('forex') || planNameLower.includes('cloud forex')) {
-        // Match by name pattern
-        if (planNameLower.includes('1') || planNameLower.includes('basic')) {
-          PLAN_MAPPING.basic.pricelistId = plan.id;
-          console.log(`  ✅ Basic plan matched: ${plan.name} (ID: ${plan.id})`);
-        } else if (planNameLower.includes('2') || planNameLower.includes('standard')) {
-          PLAN_MAPPING.prime.pricelistId = plan.id;
-          console.log(`  ✅ Prime plan matched: ${plan.name} (ID: ${plan.id})`);
-        } else if (planNameLower.includes('3') || planNameLower.includes('premium')) {
-          PLAN_MAPPING.pro.pricelistId = plan.id;
-          console.log(`  ✅ Pro plan matched: ${plan.name} (ID: ${plan.id})`);
-        }
-      }
-    }
-
-    return pricelistCache;
-  } catch (error) {
-    console.error('❌ Failed to fetch Zomro pricelist:', error);
-    throw error;
-  }
-}
-
-/**
- * Get plan parameters (OS options, datacenter options, etc.)
- * @internal Used for debugging/advanced configuration
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getPlanParameters(pricelistId: number, period: number = 1): Promise<Record<string, unknown>> {
-  try {
-    const response = await zomroRequest('v2.instances.order.param', {
-      pricelist: pricelistId,
-      period: period,
-    });
-
-    return response.doc as Record<string, unknown>;
-  } catch (error) {
-    console.error('❌ Failed to get plan parameters:', error);
-    throw error;
-  }
-}
-
-/**
- * Generate a secure password that meets Zomro requirements
- * Must contain: 1 uppercase, 1 lowercase, 1 number, min 8 chars
+ * Generate secure password
  */
 function generateSecurePassword(): string {
-  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-  const lower = 'abcdefghjkmnpqrstuvwxyz';
-  const numbers = '23456789';
-  const special = '!@#$%';
-
-  // Ensure one of each required type
-  let password = '';
-  password += upper.charAt(Math.floor(Math.random() * upper.length));
-  password += lower.charAt(Math.floor(Math.random() * lower.length));
-  password += numbers.charAt(Math.floor(Math.random() * numbers.length));
-  password += special.charAt(Math.floor(Math.random() * special.length));
-
-  // Fill the rest (12 more chars for 16 total)
-  const all = upper + lower + numbers;
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let password = 'Aa1!'; // Ensure requirements
   for (let i = 0; i < 12; i++) {
-    password += all.charAt(Math.floor(Math.random() * all.length));
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-
-  // Shuffle the password
   return password.split('').sort(() => Math.random() - 0.5).join('');
 }
 
 /**
- * Create a Cloud Forex VPS with Windows + MetaTrader pre-installed
+ * Create Cloud Forex VPS - OFFICIAL ZOMRO METHOD
+ * Uses 2-step process:
+ * 1. v2.instances.order.param - Add to cart
+ * 2. cartorder.create.confirm - Pay and activate
  * 
- * Zomro uses a cart-based system:
- * 1. Add to cart
- * 2. Confirm order
- * 
- * @param planId - Our internal plan ID (basic, prime, pro)
- * @param hostname - Server hostname/label
- * @param location - Location ID (default: amsterdam/nl)
- * @returns Object with instance ID and initial status
+ * Key parameters:
+ * - use_ssh_key: 'off' - Disable SSH key requirement for Windows
+ * - force_use_new_cart: 'on' - Ensure clean cart
+ * - paymethod_id: '0' - Pay from account balance
  */
 export async function createForexVPS(
   planId: string,
   hostname: string,
-  location: string = 'amsterdam'
-): Promise<{
-  instanceId: string;
-  status: string;
-  orderId?: string;
-  password?: string;
-}> {
-  try {
-    // Make sure we have the pricelist IDs
-    await fetchPricelist();
+  location = 'amsterdam'
+): Promise<{ instanceId: string; status: string; password?: string }> {
+  
+  const planConfig = ZOMRO_PLANS[planId];
+  if (!planConfig) {
+    throw new Error(`Unknown plan: ${planId}`);
+  }
 
-    const planConfig = PLAN_MAPPING[planId];
-    if (!planConfig) {
-      throw new Error(`No Zomro plan found for ${planId}`);
-    }
+  const password = generateSecurePassword();
+  const sanitizedHostname = hostname.replace(/[^a-zA-Z0-9-]/g, '-').substring(0, 50);
 
-    if (planConfig.pricelistId === 0) {
-      throw new Error(`Zomro plan ${planId} not found in pricelist. Run fetchPricelist() first.`);
-    }
+  console.log(`🚀 Creating VPS: ${planConfig.name} (pricelist ${planConfig.pricelistId})`);
 
-    const datacenter = REGION_MAPPING[location] || 'nl';
-    const password = generateSecurePassword();
-
-    // Sanitize hostname
-    const sanitizedHostname = hostname
-      .replace(/[^a-zA-Z0-9-]/g, '-')
-      .substring(0, 50);
-
-    console.log('🚀 Creating Zomro Cloud Forex VPS:', {
-      plan: planConfig.name,
-      hostname: sanitizedHostname,
-      datacenter,
-    });
-
-    // Step 1: Add service to cart
-    const addToCartResponse = await zomroRequest('v2.instances.order', {
-      pricelist: planConfig.pricelistId,
-      period: 1, // Monthly
-      server_name: sanitizedHostname,
-      server_password: password,
-      datacenter: datacenter,
-      // Cloud Forex includes Windows + MT5 by default
-      sok: 'ok',
-    });
-
-    console.log('📝 Added to cart:', addToCartResponse);
-
-    // Extract cart item ID (elid)
-    const doc = addToCartResponse.doc as Record<string, unknown>;
-    const cartItemId = doc.id || doc.elid;
-
-    if (!cartItemId) {
-      // Sometimes Zomro creates the order directly
-      // Check if we got a service ID back
-      if (doc.id) {
-        return {
-          instanceId: String(doc.id),
-          status: 'provisioning',
-          password: password,
-        };
-      }
-      throw new Error('No cart item ID returned from Zomro');
-    }
-
-    // Step 2: Confirm and pay from account balance
-    const confirmResponse = await zomroRequest('cartorder.create.confirm', {
-      elid: String(cartItemId),
-      paymethod_id: 0, // Pay from account balance
-      sok: 'ok',
-    });
-
-    console.log('✅ Order confirmed:', confirmResponse);
-
-    // Extract the service ID
-    const confirmDoc = confirmResponse.doc as Record<string, unknown>;
-    const serviceId = confirmDoc.id || confirmDoc.service_id || confirmDoc.elid;
-
-    if (!serviceId) {
-      // Try to get from nested structure
-      const elements = confirmDoc.elem as Array<Record<string, unknown>> | undefined;
-      if (elements && elements.length > 0) {
-        return {
-          instanceId: String(elements[0].id || cartItemId),
-          status: 'provisioning',
-          orderId: String(cartItemId),
-          password: password,
-        };
-      }
-    }
-
+  // MOCK MODE: Bypass API if enabled (useful for development)
+  if (USE_ZOMRO_MOCK) {
+    console.log('⚠️ ZOMRO MOCK MODE ENABLED: Simulating successful VPS creation');
     return {
-      instanceId: String(serviceId || cartItemId),
+      instanceId: `mock-zomro-${Date.now()}`,
       status: 'provisioning',
-      orderId: String(cartItemId),
+      password: password,
+    };
+  }
+
+  // Get Windows OS template UUID
+  const osTemplateId = await findWindowsOSTemplate();
+
+  try {
+    // ============================================
+    // STEP 1: Add to cart via v2.instances.order.param
+    // ============================================
+    console.log('📦 Step 1: Adding VPS to cart...');
+    
+    const step1Res = await zomroRequest('v2.instances.order.param', {
+      order_period: 1,
+      licence_agreement: 'on',
+      use_ssh_key: 'off',              // 🔑 Critical: Disable SSH key for Windows
+      pricelist: planConfig.pricelistId,
+      servername: sanitizedHostname,
+      password: password,
+      instances_os: osTemplateId,
+      order_count: 1,
+      force_use_new_cart: 'on',
+      sok: 'ok',
+    });
+
+    const doc1 = step1Res.doc as Record<string, unknown>;
+    
+    // Extract lineitem.id from response
+    let lineitemId = '';
+    if (doc1['lineitem.id'] && typeof doc1['lineitem.id'] === 'object') {
+      lineitemId = String((doc1['lineitem.id'] as Record<string, string>)['$'] || '');
+    } else if (doc1.elid) {
+      lineitemId = String(typeof doc1.elid === 'object' ? (doc1.elid as Record<string, string>)['$'] : doc1.elid);
+    }
+
+    if (!lineitemId) {
+      console.error('Step 1 response:', JSON.stringify(doc1).substring(0, 500));
+      throw new Error('Failed to get lineitem.id from cart order');
+    }
+
+    console.log(`✅ Step 1 Success! Lineitem ID: ${lineitemId}`);
+
+    // ============================================
+    // STEP 2: Confirm and pay via cartorder.create.confirm
+    // ============================================
+    console.log('💳 Step 2: Confirming and paying...');
+    
+    const step2Res = await zomroRequest('cartorder.create.confirm', {
+      elid: lineitemId,
+      paymethod_id: 0,  // Pay from account balance
+      sok: 'ok',
+    });
+
+    const doc2 = step2Res.doc as Record<string, unknown>;
+    
+    // Check for errors
+    if (doc2.error) {
+      throw new Error(`Payment failed: ${JSON.stringify(doc2.error)}`);
+    }
+
+    console.log('✅ Step 2 Success! Service is being activated.');
+
+    // ============================================
+    // STEP 3: Find the new service ID
+    // ============================================
+    console.log('🔍 Step 3: Finding new service ID...');
+    
+    // Poll for the new service to appear (it takes a few seconds)
+    let serviceId = '';
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await new Promise(r => setTimeout(r, 3000)); // Wait 3 seconds
+      
+      const services = await listVPSInstances();
+      // Sort by ID descending to get newest first
+      const sorted = services.sort((a, b) => parseInt(String(b.id)) - parseInt(String(a.id)));
+      
+      if (sorted.length > 0) {
+        // The newest service should be ours
+        const newest = sorted[0];
+        const newestId = String(newest.id);
+        
+        // Verify it's a new service (ID should be much higher than lineitem ID usually)
+        // lineitem IDs are typically 4-digit, service IDs are 7-digit
+        if (newestId.length >= 6 || parseInt(newestId) > 100000) {
+          serviceId = newestId;
+          console.log(`🎉 VPS Created! Service ID: ${serviceId}`);
+          break;
+        }
+      }
+      
+      console.log(`   Attempt ${attempt + 1}/10: Service not ready yet...`);
+    }
+    
+    if (serviceId) {
+      return {
+        instanceId: serviceId,
+        status: 'provisioning',
+        password: password,
+      };
+    }
+
+    // Fallback: return lineitem ID if service not found yet
+    console.log('⚠️ Service not found in list yet, using lineitem ID as fallback');
+    console.log('   The actual service ID will be available once activation completes.');
+    return {
+      instanceId: lineitemId,
+      status: 'provisioning',
       password: password,
     };
 
-  } catch (error) {
-    console.error('❌ Failed to create Zomro VPS:', error);
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error('❌ Failed to create Zomro VPS:', errorMsg);
     throw error;
   }
 }
 
 /**
- * Get VPS instance details including IP and credentials
- * 
- * @param instanceId - The Zomro service ID
+ * Find Windows OS Template UUID for Cloud Forex plans
+ * Returns the UUID format used by v2.instances API
+ */
+async function findWindowsOSTemplate(): Promise<string> {
+  // Default Windows Server 2022 optimized UUID for Cloud Forex
+  // This was discovered via the v2.instances.order.param slist
+  const DEFAULT_WINDOWS_UUID = 'cc388142-2bd6-47ba-8989-1141063f3245';
+  
+  try {
+    // Try to get the list of available OS templates
+    const res = await zomroRequest('v2.instances.order.param', {
+      pricelist: ZOMRO_PLANS.basic.pricelistId,
+      period: 1,
+    });
+    
+    const doc = res.doc as Record<string, unknown>;
+    const slist = doc.slist as Array<Record<string, unknown>> | undefined;
+    
+    if (slist) {
+      const osList = slist.find(s => s.$name === 'instances_os');
+      if (osList && osList.val) {
+        const vals = Array.isArray(osList.val) ? osList.val : [osList.val];
+        const windows = vals.find((v: Record<string, string>) => 
+          v.$ && v.$.toLowerCase().includes('windows')
+        );
+        if (windows && (windows as Record<string, string>).$key) {
+          console.log(`✅ Found Windows OS: ${(windows as Record<string, string>).$key}`);
+          return (windows as Record<string, string>).$key;
+        }
+      }
+    }
+  } catch (e) {
+    console.log('⚠️ Could not fetch OS templates, using default');
+  }
+  
+  console.log(`ℹ️ Using default Windows OS: ${DEFAULT_WINDOWS_UUID}`);
+  return DEFAULT_WINDOWS_UUID;
+}
+
+/**
+ * Get VPS details using instances.edit API
+ * This is the correct V2 function for Cloud VPS
  */
 export async function getVPSDetails(instanceId: string): Promise<{
   instanceId: string;
@@ -431,181 +360,126 @@ export async function getVPSDetails(instanceId: string): Promise<{
   username: string;
   password?: string;
 } | null> {
-  // Skip mock IDs
-  if (instanceId.startsWith('mock-') || instanceId.startsWith('pending-')) {
-    console.log(`🧪 [MOCK/PENDING] Skipping: ${instanceId}`);
-    const createdTime = parseInt(instanceId.split('-').pop() || '0');
-    const elapsed = Date.now() - createdTime;
-    const isReady = elapsed > 60000;
-
+  // Handle mock/legacy IDs
+  if (instanceId.startsWith('mock-') || instanceId.includes('mock')) {
     return {
       instanceId,
-      status: isReady ? 'active' : 'provisioning',
-      ipv4: isReady ? `185.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}` : '',
-      hostname: 'Zomro Cloud Forex VPS',
+      status: 'active',
+      ipv4: '0.0.0.0',
+      hostname: 'Mock VPS',
       username: 'Administrator',
-      password: isReady ? 'TempPassword123!' : undefined,
-    };
-  }
-
-  // Skip legacy IDs from other providers
-  const isCloudzyUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(instanceId);
-  if (isCloudzyUUID) {
-    console.log(`⚠️ [LEGACY] Skipping Cloudzy UUID: ${instanceId}`);
-    return {
-      instanceId,
-      status: 'legacy',
-      ipv4: '',
-      hostname: 'Legacy Cloudzy VPS',
-      username: 'Administrator',
-      password: undefined,
     };
   }
 
   try {
-    // Get service details
-    const response = await zomroRequest('v2.instances', {
-      elid: instanceId,
-    });
-
-    const doc = response.doc as Record<string, unknown>;
-    const elements = doc.elem as Array<Record<string, unknown>> | undefined;
-
-    if (!elements || elements.length === 0) {
-      console.warn(`⚠️ No service data found for ${instanceId}`);
-      return null;
-    }
-
-    const service = elements[0];
-
-    // Map Zomro status to our standard statuses
-    const zomroStatus = String(service.status || '').toLowerCase();
-    let status = 'unknown';
-    if (zomroStatus === 'active' || zomroStatus === 'ok') {
-      status = 'active';
-    } else if (zomroStatus === 'suspended' || zomroStatus === 'stopped') {
-      status = 'suspended';
-    } else if (zomroStatus === 'pending' || zomroStatus === 'creating') {
-      status = 'provisioning';
-    }
-
-    return {
-      instanceId: String(service.id || instanceId),
-      status: status,
-      ipv4: String(service.ip || service.ipv4 || ''),
-      hostname: String(service.name || service.server_name || ''),
-      username: String(service.username || 'Administrator'),
-      password: service.password ? String(service.password) : undefined,
+    // Use instances.edit for Cloud VPS details
+    const res = await zomroRequest('instances.edit', { elid: instanceId });
+    const doc = res.doc as Record<string, unknown>;
+    
+    // BillManager returns values as { $: "value" } objects
+    const getValue = (field: unknown): string => {
+      if (!field) return '';
+      if (typeof field === 'object' && field !== null && '$' in field) {
+        return String((field as Record<string, string>)['$']);
+      }
+      return String(field);
     };
-
+    
+    const status = getValue(doc.status);
+    const ip = getValue(doc.ip);
+    const name = getValue(doc.name) || getValue(doc.servername);
+    const password = getValue(doc.password);
+    
+    return {
+      instanceId: getValue(doc.id) || instanceId,
+      status: status === '2' ? 'active' : 'provisioning',
+      ipv4: ip,
+      hostname: name,
+      username: 'Administrator',
+      password: password || undefined,
+    };
   } catch (error) {
-    console.error(`❌ Failed to get VPS details for ${instanceId}:`, error);
+    console.error(`Failed to get VPS ${instanceId}:`, error);
     return null;
   }
 }
 
 /**
- * List all VPS instances
+ * List all Cloud VPS instances
+ * Uses 'instances' function for V2 Cloud VPS
  */
 export async function listVPSInstances(): Promise<Array<Record<string, unknown>>> {
   try {
-    const response = await zomroRequest('v2.instances');
-    const doc = response.doc as Record<string, unknown>;
-    return (doc.elem as Array<Record<string, unknown>>) || [];
+    const res = await zomroRequest('instances');
+    const doc = res.doc as Record<string, unknown>;
+    const elems = doc.elem as Array<Record<string, unknown>> | undefined;
+    
+    if (!elems) return [];
+    
+    // Normalize the response - extract $ values
+    return (Array.isArray(elems) ? elems : [elems]).map(elem => {
+      const getValue = (field: unknown): string => {
+        if (!field) return '';
+        if (typeof field === 'object' && field !== null && '$' in field) {
+          return String((field as Record<string, string>)['$']);
+        }
+        return String(field);
+      };
+      
+      return {
+        id: getValue(elem.id),
+        name: getValue(elem.name),
+        status: getValue(elem.status),
+        ip: getValue(elem.ip),
+        cost: getValue(elem.cost),
+        expiredate: getValue(elem.expiredate),
+      };
+    });
   } catch (error) {
-    console.error('❌ Failed to list VPS instances:', error);
+    console.error('Failed to list instances:', error);
     return [];
   }
 }
 
 /**
- * Control VPS: start, stop, reboot
- */
-async function controlVPS(instanceId: string, action: 'start' | 'stop' | 'reboot'): Promise<boolean> {
-  try {
-    await zomroRequest(`v2.instances.${action}`, {
-      elid: instanceId,
-      sok: 'ok',
-    });
-    console.log(`🔄 VPS ${instanceId} ${action} initiated`);
-    return true;
-  } catch (error) {
-    console.error(`❌ Failed to ${action} VPS ${instanceId}:`, error);
-    return false;
-  }
-}
-
-/**
- * Reboot a VPS
+ * Control VPS: reboot, stop, start, delete
+ * Uses 'instances.*' functions for Cloud VPS
  */
 export async function rebootVPS(instanceId: string): Promise<boolean> {
-  return controlVPS(instanceId, 'reboot');
+  try {
+    await zomroRequest('instances.reboot', { elid: instanceId, sok: 'ok' });
+    return true;
+  } catch { return false; }
 }
 
-/**
- * Stop a VPS
- */
 export async function stopVPS(instanceId: string): Promise<boolean> {
-  return controlVPS(instanceId, 'stop');
+  try {
+    await zomroRequest('instances.stop', { elid: instanceId, sok: 'ok' });
+    return true;
+  } catch { return false; }
 }
 
-/**
- * Start a VPS
- */
 export async function startVPS(instanceId: string): Promise<boolean> {
-  return controlVPS(instanceId, 'start');
+  try {
+    await zomroRequest('instances.start', { elid: instanceId, sok: 'ok' });
+    return true;
+  } catch { return false; }
 }
 
-/**
- * Delete/Cancel a VPS
- */
 export async function deleteVPS(instanceId: string): Promise<boolean> {
   try {
-    await zomroRequest('v2.instances.delete', {
-      elid: instanceId,
-      sok: 'ok',
-    });
-    console.log(`🗑️ VPS ${instanceId} deletion initiated`);
+    await zomroRequest('instances.delete', { elid: instanceId, sok: 'ok' });
     return true;
-  } catch (error) {
-    console.error(`❌ Failed to delete VPS ${instanceId}:`, error);
-    return false;
-  }
+  } catch { return false; }
 }
 
 /**
- * Rebuild/Reinstall VPS with new OS
- */
-export async function reinstallVPS(
-  instanceId: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _osId?: number
-): Promise<boolean> {
-  try {
-    await zomroRequest('v2.instances.rebuild', {
-      elid: instanceId,
-      // For Cloud Forex, Windows + MT5 is default
-      sok: 'ok',
-    });
-    console.log(`🔄 VPS ${instanceId} reinstall initiated`);
-    return true;
-  } catch (error) {
-    console.error(`❌ Failed to reinstall VPS ${instanceId}:`, error);
-    return false;
-  }
-}
-
-/**
- * Poll VPS status until active or timeout
- * 
- * @param instanceId - Instance ID to poll
- * @param maxAttempts - Maximum polling attempts (default: 60 = ~15 minutes with 15s interval)
- * @param intervalMs - Interval between polls in ms (default: 15000 = 15 seconds)
+ * Poll until VPS is active
  */
 export async function pollUntilActive(
   instanceId: string,
-  maxAttempts: number = 60,
-  intervalMs: number = 15000
+  maxAttempts = 60,
+  intervalMs = 15000
 ): Promise<{
   instanceId: string;
   status: string;
@@ -614,89 +488,23 @@ export async function pollUntilActive(
   username: string;
   password?: string;
 } | null> {
-  console.log(`⏳ Starting polling for ${instanceId} (max ${maxAttempts} attempts, ${intervalMs}ms interval)`);
+  console.log(`⏳ Polling VPS ${instanceId}...`);
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+  for (let i = 0; i < maxAttempts; i++) {
     const details = await getVPSDetails(instanceId);
-
-    if (!details) {
-      console.log(`  Attempt ${attempt}: Instance not found, waiting...`);
-      await new Promise(resolve => setTimeout(resolve, intervalMs));
-      continue;
-    }
-
-    console.log(`  Attempt ${attempt}: Status = ${details.status}`);
-
-    if (details.status === 'active' && details.ipv4) {
-      console.log(`✅ VPS ${instanceId} is now active!`);
+    
+    if (details?.status === 'active' && details?.ipv4) {
+      console.log(`✅ VPS ${instanceId} is active!`);
       return details;
     }
 
-    if (details.status === 'error' || details.status === 'failed') {
-      console.error(`❌ VPS ${instanceId} failed to provision`);
-      return null;
-    }
-
-    await new Promise(resolve => setTimeout(resolve, intervalMs));
+    await new Promise(r => setTimeout(r, intervalMs));
   }
 
-  console.warn(`⚠️ Polling timeout for ${instanceId}`);
+  console.warn(`⏰ Polling timeout for ${instanceId}`);
   return null;
 }
 
-// ============================================
-// MOCK MODE FOR DEVELOPMENT/TESTING
-// ============================================
-
-const USE_MOCK = process.env.NODE_ENV === 'development' && !process.env.ZOMRO_PASSWORD;
-
-/**
- * Mock version of createForexVPS for testing
- */
-export async function createForexVPSMock(
-  planId: string,
-  hostname: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _location: string = 'amsterdam'
-): Promise<{ instanceId: string; status: string; password?: string }> {
-  console.log(`🧪 [MOCK] Creating Zomro Cloud Forex VPS: ${planId} - ${hostname}`);
-
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  return {
-    instanceId: `mock-zomro-${Date.now()}`,
-    status: 'provisioning',
-    password: 'MockZomroPass123!',
-  };
-}
-
-/**
- * Mock version of getVPSDetails for testing
- */
-export async function getVPSDetailsMock(instanceId: string): Promise<{
-  instanceId: string;
-  status: string;
-  ipv4: string;
-  hostname: string;
-  username: string;
-  password?: string;
-} | null> {
-  console.log(`🧪 [MOCK] Getting Zomro VPS details: ${instanceId}`);
-
-  const createdTime = parseInt(instanceId.split('-').pop() || '0');
-  const elapsed = Date.now() - createdTime;
-  const isReady = elapsed > 30000;
-
-  return {
-    instanceId,
-    status: isReady ? 'active' : 'provisioning',
-    ipv4: isReady ? `185.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}` : '',
-    hostname: `Zomro Cloud Forex ${instanceId}`,
-    username: 'Administrator',
-    password: isReady ? 'ZomroSecure123!' : undefined,
-  };
-}
-
-// Export the appropriate functions based on environment
-export const createVPS = USE_MOCK ? createForexVPSMock : createForexVPS;
-export const getVPS = USE_MOCK ? getVPSDetailsMock : getVPSDetails;
+// Exports for compatibility
+export const createVPS = createForexVPS;
+export const getVPS = getVPSDetails;
