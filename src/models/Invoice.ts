@@ -16,6 +16,7 @@ export interface IInvoice extends Document {
   description: string;
   transactionId?: mongoose.Types.ObjectId; // Reference to Transaction
   stripePaymentIntentId?: string;
+  stripeSubscriptionId?: string; // For subscription invoices
   stripeSessionId?: string;
   metadata?: {
     previousBalance?: number;
@@ -80,6 +81,10 @@ const InvoiceSchema = new Schema<IInvoice>(
       sparse: true,
     },
     stripePaymentIntentId: {
+      type: String,
+      sparse: true,
+    },
+    stripeSubscriptionId: {
       type: String,
       sparse: true,
     },

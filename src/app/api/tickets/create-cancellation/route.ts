@@ -61,7 +61,6 @@ export async function POST(req: NextRequest) {
     const pIp = ipAddress || 'Pending';
     
     // Get Plan Specs
-    // @ts-expect-error - indexing with string on PLANS might fail type check if strict
     const planDetails = PLANS[service?.planId as keyof typeof PLANS] || PLANS['basic'];
     
     const formattedDate = service?.currentPeriodEnd 

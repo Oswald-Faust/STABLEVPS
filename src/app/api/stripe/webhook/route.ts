@@ -296,8 +296,8 @@ export async function POST(request: NextRequest) {
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice;
-        const subscriptionId = invoice.subscription as string;
+        const stripeInvoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = (stripeInvoice as unknown as { subscription: string | null }).subscription;
         
         if (subscriptionId) {
              const user = await User.findOne({ 'services.stripeSubscriptionId': subscriptionId });
@@ -310,7 +310,7 @@ export async function POST(request: NextRequest) {
              } else {
                  // Legacy fallback
                  // Try finding by customer ID as fallback if subscription ID match fails
-                 const customerId = invoice.customer as string;
+                 const customerId = stripeInvoice.customer as string;
                  const legacyUser = await User.findOne({ stripeCustomerId: customerId });
                  if (legacyUser) {
                       // We can't be sure WHICH subscription failed if they have multiple and we only have customer ID
