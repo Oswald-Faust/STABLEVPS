@@ -38,14 +38,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check subscription status
-    // In development, we allow pending users to login to facilitate testing without webhooks
-    if (user.subscription?.status === 'pending' && process.env.NODE_ENV !== 'development') {
-      return NextResponse.json(
-        { error: 'Please complete your payment to access your account' },
-        { status: 402 }
-      );
-    }
+    // Note: We no longer block login for pending subscriptions.
+    // Users can login and the dashboard will show appropriate messaging
+    // if their subscription needs attention. This prevents issues when
+    // Stripe webhooks fail to update the subscription status.
 
     // Generate JWT token
     const token = signToken({
