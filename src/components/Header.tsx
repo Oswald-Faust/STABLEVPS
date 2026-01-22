@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { ThemeToggle } from '@/components/ThemeToggle';
+
 import logo from '@/assets/logo.png';
 
 export default function Header({ isLoggedIn }: { isLoggedIn?: boolean }) {
@@ -84,7 +84,7 @@ export default function Header({ isLoggedIn }: { isLoggedIn?: boolean }) {
             {/* Desktop CTA + Language + Theme */}
             <div className="hidden lg:flex items-center gap-3">
               {/* Theme Toggle */}
-              <ThemeToggle />
+              {/* Theme Toggle removed */}
               
               {/* Language Switcher */}
               <div className="relative">
@@ -201,7 +201,7 @@ export default function Header({ isLoggedIn }: { isLoggedIn?: boolean }) {
                     </button>
                   ))}
                 </div>
-                <ThemeToggle />
+
               </div>
               
               {isLoggedIn ? (

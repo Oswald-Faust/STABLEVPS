@@ -32,11 +32,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       description: descriptions[locale as keyof typeof descriptions] || descriptions.fr,
       type: "website",
       locale: locale === 'fr' ? 'fr_FR' : 'en_US',
+      images: ['/logo.png'],
     },
     twitter: {
       card: "summary_large_image",
       title: titles[locale as keyof typeof titles] || titles.fr,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.fr,
+      images: ['/logo.png'],
     },
     robots: {
       index: true,
