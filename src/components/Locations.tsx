@@ -1,23 +1,20 @@
 "use client";
 
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import londresImage from '@/assets/londres.jpeg';
 
 export default function Locations() {
   const t = useTranslations('locations');
 
   const locations = [
     { cityKey: 'london', countryKey: 'uk', flag: '🇬🇧', latency: '<1ms', featured: true },
-    { cityKey: 'amsterdam', countryKey: 'netherlands', flag: '🇳🇱', latency: '<2ms', featured: false },
-    { cityKey: 'frankfurt', countryKey: 'germany', flag: '🇩🇪', latency: '<2ms', featured: false },
-    { cityKey: 'newYork', countryKey: 'usa', flag: '🇺🇸', latency: '<3ms', featured: true },
-    { cityKey: 'singapore', countryKey: 'sg', flag: '🇸🇬', latency: '<5ms', featured: false },
-    { cityKey: 'tokyo', countryKey: 'japan', flag: '🇯🇵', latency: '<5ms', featured: false },
   ];
 
   return (
     <section id="locations" className="py-24 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-black" />
+      <div className="absolute inset-0 bg-gray-50 dark:bg-black" />
       
       {/* World Map Background (stylized) */}
       <div className="absolute inset-0 opacity-10">
@@ -53,18 +50,18 @@ export default function Locations() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
-            <span className="text-green-400 text-sm font-medium">{t('badge')}</span>
+            <span className="text-green-600 dark:text-green-400 text-sm font-medium">{t('badge')}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
             {t('title')} <span className="gradient-text">{t('titleHighlight')}</span>
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             {t('subtitle')}
           </p>
         </div>
 
         {/* Locations Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="flex flex-col items-center gap-8 max-w-2xl mx-auto">
           {locations.map((location, index) => (
             <div
               key={index}
@@ -77,8 +74,8 @@ export default function Locations() {
               
               {/* Info */}
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white">{t(`cities.${location.cityKey}`)}</h3>
-                <p className="text-gray-400 text-sm">{t(`countries.${location.countryKey}`)}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t(`cities.${location.cityKey}`)}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t(`countries.${location.countryKey}`)}</p>
               </div>
               
               {/* Latency */}
@@ -99,6 +96,16 @@ export default function Locations() {
               )}
             </div>
           ))}
+          
+          {/* London Image */}
+          <div className="w-full max-w-lg mt-8 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
+            <Image
+              src={londresImage}
+              alt="Londres Datacenter"
+              className="w-full h-auto"
+              placeholder="blur"
+            />
+          </div>
         </div>
 
         {/* Info Box */}
@@ -108,10 +115,10 @@ export default function Locations() {
               <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-semibold text-white">{t('infoTitle')}</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{t('infoTitle')}</h3>
             </div>
-            <p className="text-gray-400">
-              {t('infoTitle')} Choisissez le datacenter le plus proche de votre <span className="text-green-400 font-medium">{t('broker')}</span>, pas de vous. Pour les brokers Forex européens, nous recommandons <span className="text-green-400 font-medium">{t('cities.london')}</span> ou <span className="text-green-400 font-medium">{t('cities.amsterdam')}</span>.
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('infoTitle')} Tous nos serveurs sont hébergés à <span className="text-green-600 dark:text-green-400 font-medium">{t('cities.london')}</span> pour une latence optimale avec les brokers Forex européens.
             </p>
           </div>
         </div>

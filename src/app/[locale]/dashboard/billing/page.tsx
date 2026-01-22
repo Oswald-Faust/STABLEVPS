@@ -154,7 +154,7 @@ export default function BillingPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-muted text-sm">Solde disponible</p>
-              <p className="text-3xl font-bold text-foreground">${displayBalance.toFixed(2)} <span className="text-sm font-normal text-muted">USD</span></p>
+              <p className="text-3xl font-bold text-foreground">{displayBalance.toFixed(2)}€ <span className="text-sm font-normal text-muted">EUR</span></p>
             </div>
             <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
               <CreditCard className="w-6 h-6 text-green-500" />
@@ -301,7 +301,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="font-bold text-foreground">${invoice.amount.toFixed(2)}</p>
+                    <p className="font-bold text-foreground">{invoice.amount.toFixed(2)}€</p>
                     <p className="text-xs text-muted">{invoice.currency}</p>
                   </div>
                   <button 

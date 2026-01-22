@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, CreditCard, DollarSign, CheckCircle, AlertCircle, Plus } from "lucide-react";
+import { X, CreditCard, Euro, CheckCircle, AlertCircle, Plus } from "lucide-react";
 
 interface AddFundsModalProps {
   isOpen: boolean;
@@ -75,13 +75,13 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
       setAmount(num);
       setError("");
     } else if (value !== "") {
-      setError("Le montant doit être entre $5 et $1000");
+      setError("Le montant doit être entre 5€ et 1000€");
     }
   };
 
   const handleSubmit = async () => {
     if (amount < 5 || amount > 1000) {
-      setError("Le montant doit être entre $5 et $1000");
+      setError("Le montant doit être entre 5€ et 1000€");
       return;
     }
 
@@ -147,11 +147,11 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
               Paiement réussi !
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              ${amount.toFixed(2)} ont été ajoutés à votre portefeuille.
+              {amount.toFixed(2)}€ ont été ajoutés à votre portefeuille.
             </p>
             <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mb-6">
               <p className="text-sm text-gray-400">Nouveau solde</p>
-              <p className="text-3xl font-bold text-green-500">${newBalance?.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-green-500">{newBalance?.toFixed(2)}€</p>
             </div>
             <button
               onClick={handleClose}
@@ -172,11 +172,11 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
         <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-green-500" />
+              <Euro className="w-5 h-5 text-green-500" />
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800 dark:text-white">Recharger le portefeuille</h3>
-              <p className="text-xs text-gray-500">Solde actuel: ${currentBalance.toFixed(2)} USD</p>
+              <p className="text-xs text-gray-500">Solde actuel: {currentBalance.toFixed(2)}€ EUR</p>
             </div>
           </div>
           <button 
@@ -268,7 +268,7 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
                       : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                   }`}
                 >
-                  ${preset}
+                  {preset}€
                 </button>
               ))}
             </div>
@@ -280,7 +280,7 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
               Ou entrez un montant personnalisé
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">€</span>
               <input
                 type="number"
                 value={customAmount}
@@ -295,7 +295,7 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
                 }`}
               />
             </div>
-            <p className="text-xs text-gray-400 mt-1">Min: $5 • Max: $1,000</p>
+            <p className="text-xs text-gray-400 mt-1">Min: 5€ • Max: 1,000€</p>
           </div>
 
           {/* Error message */}
@@ -310,11 +310,11 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
           <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
             <div className="flex justify-between items-center mb-2">
               <span className="text-gray-500 text-sm">Montant à ajouter</span>
-              <span className="text-xl font-bold text-gray-800 dark:text-white">${amount.toFixed(2)}</span>
+              <span className="text-xl font-bold text-gray-800 dark:text-white">{amount.toFixed(2)}€</span>
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-400">Nouveau solde</span>
-              <span className="text-green-500 font-semibold">${(currentBalance + amount).toFixed(2)}</span>
+              <span className="text-green-500 font-semibold">{(currentBalance + amount).toFixed(2)}€</span>
             </div>
           </div>
 
@@ -337,7 +337,7 @@ export default function AddFundsModal({ isOpen, onClose, currentBalance, onBalan
               ) : (
                 <>
                   <CreditCard size={18} />
-                  {hasPaymentMethod ? `Recharger $${amount.toFixed(2)}` : `Payer $${amount.toFixed(2)}`}
+                  {hasPaymentMethod ? `Recharger ${amount.toFixed(2)}€` : `Payer ${amount.toFixed(2)}€`}
                 </>
               )}
             </button>

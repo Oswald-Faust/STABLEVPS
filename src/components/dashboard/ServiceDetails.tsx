@@ -161,7 +161,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                      <div className="grid grid-cols-1 gap-y-2 text-sm">
                         <div className="flex justify-between border-b border-gray-100 dark:border-gray-700 pb-2">
                              <span className="text-gray-500">Dedicated IP</span>
-                             <span>1 Dedicated IP $2.00 USD</span>
+                              <span>1 Dedicated IP 2.00€ EUR</span>
                         </div>
                         <div className="flex justify-between border-b border-gray-100 dark:border-gray-700 pb-2">
                              <span className="text-gray-500">RAM</span>
@@ -181,7 +181,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                         </div>
                         <div className="flex justify-between">
                              <span className="text-gray-500">Location</span>
-                             <span>UK (London) $4.00 USD</span>
+                              <span>UK (London) 4.00€ EUR</span>
                         </div>
                      </div>
                  )}
@@ -201,7 +201,7 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
                  </div>
                  <div>
                      <div className="text-xs text-gray-400 font-bold uppercase mb-1">Montant récurrent</div>
-                     <div className="text-gray-800 dark:text-gray-200 font-medium">${service.subscription?.planId === 'basic' ? '31.99' : '49.99'} USD</div>
+                     <div className="text-gray-800 dark:text-gray-200 font-medium">{service.subscription?.planId === 'basic' ? '12.49' : (service.subscription?.planId === 'prime' ? '19.49' : '34.49')}€ EUR</div>
                  </div>
                  <div>
                      <div className="text-xs text-gray-400 font-bold uppercase mb-1">Cycle de facturation</div>

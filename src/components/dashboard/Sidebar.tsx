@@ -52,8 +52,8 @@ export default function Sidebar({ user, handleLogout, onUserUpdate }: SidebarPro
         </div>
         {expanded.credit && (
             <div className="p-4 text-center">
-            <div className="text-3xl font-bold text-foreground mb-1">${displayBalance.toFixed(2)}</div>
-            <div className="text-xs text-muted mb-4">USD</div>
+            <div className="text-3xl font-bold text-foreground mb-1">{displayBalance.toFixed(2)}€</div>
+            <div className="text-xs text-muted mb-4">EUR</div>
             <button 
                 onClick={() => setIsAddFundsModalOpen(true)}
                 className="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white font-medium rounded text-sm transition-colors flex items-center justify-center gap-2"

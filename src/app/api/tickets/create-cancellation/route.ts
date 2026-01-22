@@ -80,7 +80,7 @@ Le client souhaite annuler le service VPS suivant.
 INFORMATIONS GÉNÉRALES
 -------------------
 • Plan : ${planDetails.name} (${service?.planId})
-• Prix : $${service?.billingCycle === 'yearly' ? planDetails.yearlyPrice : planDetails.monthlyPrice} USD
+• Prix : ${service?.billingCycle === 'yearly' ? planDetails.yearlyPrice : planDetails.monthlyPrice}€ EUR
 • Cycle : ${service?.billingCycle || 'Mensuel'}
 • Date de création : ${creationDate}
 • Date d'échéance : ${formattedDate}

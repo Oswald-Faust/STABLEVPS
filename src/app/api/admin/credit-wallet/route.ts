@@ -40,8 +40,8 @@ export async function POST(req: Request) {
       userId: user._id,
       type: 'credit',
       amount: amount,
-      currency: 'USD',
-      description: reason || `Manual credit: $${amount} USD`,
+      currency: 'EUR',
+      description: reason || `Manual credit: ${amount}€ EUR`,
       status: 'completed',
       reference: `manual_${Date.now()}`,
     });
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       previousBalance,
       amountCredited: amount,
       newBalance,
-      message: `Successfully credited $${amount} to ${email}`,
+      message: `Successfully credited ${amount}€ to ${email}`,
     });
 
   } catch (error) {

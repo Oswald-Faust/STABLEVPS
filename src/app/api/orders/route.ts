@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
         userId: user._id,
         type: 'subscription',
         amount: price,
-        currency: 'USD',
+        currency: 'EUR',
         status: 'paid',
         paymentMethod: { type: 'wallet' },
         description: `VPS ${plan.name} - ${billingCycle === 'monthly' ? 'Mensuel' : 'Annuel'}`,
@@ -168,7 +168,7 @@ export async function POST(request: NextRequest) {
         line_items: [
           {
             price_data: {
-              currency: 'usd',
+              currency: 'eur',
               product_data: {
                 name: `STABLEVPS ${plan.name}`,
                 description: `VPS Trading - ${plan.platforms} plateformes - ${plan.specs.cpu}, ${plan.specs.ram}, ${plan.specs.storage}`,

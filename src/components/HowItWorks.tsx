@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import computerImg from '@/assets/ordinateur-trade.jpeg';
+import computerImg from '@/assets/another-monitor.png';
 import vpsImg from '@/assets/VPS.jpeg';
-import monitorImg from '@/assets/moniteur.jpeg';
+import monitorImg from '@/assets/trader-moniter.png';
 
 export default function HowItWorks() {
   const t = useTranslations('howItWorks');
@@ -51,18 +51,18 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="py-24 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 dark:from-black dark:via-gray-950 dark:to-black" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
-            <span className="text-green-400 text-sm font-medium">{t('badge')}</span>
+            <span className="text-green-600 dark:text-green-400 text-sm font-medium">{t('badge')}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
             {t('title')} <span className="gradient-text">{t('titleHighlight')}</span>
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             {t('subtitle')}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function HowItWorks() {
         {/* Visual Diagram */}
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mb-20">
           {/* Your PC */}
-          <div className="glass-card p-6 rounded-2xl text-center w-full max-w-xs relative bg-black/50 overflow-hidden group">
+          <div className="text-center w-full max-w-xs relative overflow-hidden group">
             <div className="relative w-full aspect-video mb-4 rounded-lg overflow-hidden">
               <Image 
                 src={computerImg} 
@@ -97,7 +97,7 @@ export default function HowItWorks() {
           </div>
 
           {/* StableVPS Cloud */}
-          <div className="glass-card p-0 rounded-2xl text-center w-full max-w-sm border-green-500/30 relative animate-pulse-glow bg-black/50 overflow-hidden group">
+          <div className="rounded-2xl text-center w-full max-w-sm border-2 border-green-500/30 relative overflow-hidden group">
             {/* <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-green-500 rounded-full text-xs font-bold text-white z-20">
               {t('diagram.cloud')}
             </div> */}
@@ -132,7 +132,7 @@ export default function HowItWorks() {
           </div>
 
           {/* Broker */}
-          <div className="glass-card p-6 rounded-2xl text-center w-full max-w-xs relative bg-black/50 overflow-hidden group">
+          <div className="text-center w-full max-w-xs relative overflow-hidden group">
             <div className="relative w-full aspect-video mb-4 rounded-lg overflow-hidden">
                <Image 
                 src={monitorImg} 
@@ -167,8 +167,8 @@ export default function HowItWorks() {
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-3">{t(step.titleKey)}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{t(step.descKey)}</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{t(step.titleKey)}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{t(step.descKey)}</p>
               </div>
             </div>
           ))}

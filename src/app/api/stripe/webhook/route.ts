@@ -93,10 +93,10 @@ export async function POST(request: NextRequest) {
                 userId,
                 type: 'wallet_topup',
                 amount,
-                currency: 'USD',
+                currency: 'EUR',
                 status: 'paid',
                 paymentMethod: paymentMethodDetails,
-                description: `Rechargement de solde: $${amount} USD`,
+                description: `Rechargement de solde: ${amount}€ EUR`,
                 transactionId: transactionId || undefined,
                 stripePaymentIntentId: session.payment_intent as string,
                 stripeSessionId: session.id,
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
                 paidAt: new Date(),
               });
               
-              console.log(`✅ Wallet credited: $${amount} for user ${userId} - Invoice ${invoiceNumber} created`);
+              console.log(`✅ Wallet credited: ${amount}€ for user ${userId} - Invoice ${invoiceNumber} created`);
             }
             // Handle subscription checkout
             // Retrieve metadata from session
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
                         userId,
                         type: 'subscription',
                         amount,
-                        currency: session.currency?.toUpperCase() || 'USD',
+                        currency: session.currency?.toUpperCase() || 'EUR',
                         status: 'paid',
                         paymentMethod: paymentMethodDetails,
                         description: `Abonnement VPS ${location} (${session.metadata?.billingCycle || 'monthly'})`,

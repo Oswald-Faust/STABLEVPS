@@ -45,18 +45,18 @@ export default function Features() {
   return (
     <section id="features" className="py-24 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-black to-gray-950" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-white to-gray-100 dark:from-gray-950 dark:via-black dark:to-gray-950" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
-            <span className="text-green-400 text-sm font-medium">{t('badge')}</span>
+            <span className="text-green-600 dark:text-green-400 text-sm font-medium">{t('badge')}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
             {t('title')} <span className="gradient-text">{t('titleHighlight')}</span>
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             {t('subtitle')}
           </p>
         </div>
@@ -74,11 +74,11 @@ export default function Features() {
               </div>
               
               {/* Content */}
-              <h3 className="text-xl font-semibold text-white mb-3">{t(`items.${key}.title`)}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed mb-6">{t(`items.${key}.description`)}</p>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">{t(`items.${key}.title`)}</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">{t(`items.${key}.description`)}</p>
               
               {/* Stat */}
-              <div className="flex items-center gap-3 pt-4 border-t border-gray-800">
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
                 <span className="text-2xl font-bold gradient-text">{t(`items.${key}.stat`)}</span>
                 <span className="text-gray-500 text-sm">{t(`items.${key}.statLabel`)}</span>
               </div>
@@ -90,36 +90,36 @@ export default function Features() {
         <div className="mt-20 glass-card rounded-3xl p-8 lg:p-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 {t('compatibility.title')} <span className="gradient-text">{t('compatibility.titleHighlight')}</span>
               </h3>
-              <p className="text-gray-400 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 {t('compatibility.description')}
               </p>
               <div className="flex flex-wrap gap-3">
                 {platforms.map((platform, i) => (
-                  <span key={i} className="px-4 py-2 bg-gray-800 rounded-lg text-sm text-gray-300 border border-gray-700">
+                  <span key={i} className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
                     {platform}
                   </span>
                 ))}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="stat-glow p-6 bg-gray-900/50 rounded-2xl text-center">
+              <div className="stat-glow p-6 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center">
                 <p className="text-4xl font-bold gradient-text mb-2">500+</p>
-                <p className="text-gray-400 text-sm">{t('compatibility.stats.traders')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('compatibility.stats.traders')}</p>
               </div>
-              <div className="stat-glow p-6 bg-gray-900/50 rounded-2xl text-center">
+              <div className="stat-glow p-6 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center">
                 <p className="text-4xl font-bold gradient-text mb-2">10M+</p>
-                <p className="text-gray-400 text-sm">{t('compatibility.stats.trades')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('compatibility.stats.trades')}</p>
               </div>
-              <div className="stat-glow p-6 bg-gray-900/50 rounded-2xl text-center">
+              <div className="stat-glow p-6 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center">
                 <p className="text-4xl font-bold gradient-text mb-2">99.9%</p>
-                <p className="text-gray-400 text-sm">{t('compatibility.stats.uptime')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('compatibility.stats.uptime')}</p>
               </div>
-              <div className="stat-glow p-6 bg-gray-900/50 rounded-2xl text-center">
+              <div className="stat-glow p-6 bg-gray-50 dark:bg-gray-900/50 rounded-2xl text-center">
                 <p className="text-4xl font-bold gradient-text mb-2">1ms</p>
-                <p className="text-gray-400 text-sm">{t('compatibility.stats.latency')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('compatibility.stats.latency')}</p>
               </div>
             </div>
           </div>

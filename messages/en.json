@@ -171,7 +171,8 @@
       "guaranteed": "Guaranteed resources"
     },
     "cta": "Get Started",
-    "paymentMethods": "Accepted payment methods"
+    "paymentMethods": "Accepted payment methods",
+    "securePayment": "100% Secure Payment"
   },
   "locations": {
     "badge": "Global Infrastructure",
@@ -251,7 +252,7 @@
       },
       "q4": {
         "question": "What payment methods do you accept?",
-        "answer": "We accept Visa, Mastercard, PayPal and cryptocurrencies (Bitcoin, Ethereum, USDT). All payments are secure and you receive an automatic invoice for each transaction."
+        "answer": "We accept Apple Pay, Visa and Mastercard. All payments are secure and you receive an automatic invoice for each transaction."
       },
       "q5": {
         "question": "What is latency and why is it important?",

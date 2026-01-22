@@ -34,7 +34,7 @@ const TransactionSchema = new Schema<ITransaction>(
     },
     currency: {
       type: String,
-      default: 'USD',
+      default: 'EUR',
       uppercase: true,
     },
     description: {

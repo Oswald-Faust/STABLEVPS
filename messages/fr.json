@@ -171,7 +171,8 @@
       "guaranteed": "Ressources garanties"
     },
     "cta": "Commencer",
-    "paymentMethods": "Moyens de paiement acceptés"
+    "paymentMethods": "Moyens de paiement acceptés",
+    "securePayment": "Paiement 100% sécurisé"
   },
   "locations": {
     "badge": "Infrastructure Mondiale",
@@ -251,7 +252,7 @@
       },
       "q4": {
         "question": "Quels moyens de paiement acceptez-vous ?",
-        "answer": "Nous acceptons Visa, Mastercard, PayPal et les cryptomonnaies (Bitcoin, Ethereum, USDT). Tous les paiements sont sécurisés et vous recevez une facture automatique à chaque transaction."
+        "answer": "Nous acceptons Apple Pay, Visa et Mastercard. Tous les paiements sont sécurisés et vous recevez une facture automatique à chaque transaction."
       },
       "q5": {
         "question": "Qu'est-ce que la latence et pourquoi est-elle importante ?",

@@ -144,7 +144,7 @@ export default function NewOrderPage() {
                 
                 <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
                 <div className="text-3xl font-bold text-green-500 mb-1">
-                  ${planPrice}
+                  {planPrice}€
                   <span className="text-sm font-normal text-muted">
                     /{billingCycle === 'monthly' ? 'mois' : 'an'}
                   </span>
@@ -232,11 +232,11 @@ export default function NewOrderPage() {
               <div>
                 <div className="font-bold text-foreground">Payer avec mon solde</div>
                 <div className="text-sm text-muted">
-                  Solde disponible: <span className="text-green-500 font-bold">${userBalance.toFixed(2)}</span>
+                  Solde disponible: <span className="text-green-500 font-bold">{userBalance.toFixed(2)}€</span>
                 </div>
                 {!canPayWithWallet && price > 0 && (
                   <div className="text-xs text-red-500 mt-1">
-                    Solde insuffisant (${price} requis)
+                    Solde insuffisant ({price}€ requis)
                   </div>
                 )}
               </div>
@@ -282,7 +282,7 @@ export default function NewOrderPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-foreground">
                 <span>Plan {selectedPlanData.name}</span>
-                <span className="font-bold">${price}</span>
+                <span className="font-bold">{price}€</span>
               </div>
               <div className="flex justify-between text-muted text-sm">
                 <span>Cycle de facturation</span>
@@ -300,7 +300,7 @@ export default function NewOrderPage() {
               <div className="border-t border-card-border pt-3 mt-3">
                 <div className="flex justify-between text-xl font-bold text-foreground">
                   <span>Total</span>
-                  <span className="text-green-500">${price} USD</span>
+                  <span className="text-green-500">{price}€ EUR</span>
                 </div>
               </div>
             </div>

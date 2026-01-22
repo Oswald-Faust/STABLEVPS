@@ -60,7 +60,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       balance: user.balance || 0,
-      currency: 'USD',
+      currency: 'EUR',
       hasPaymentMethod,
       paymentMethod: hasPaymentMethod ? {
         last4: paymentMethodLast4,
@@ -138,15 +138,15 @@ export async function POST(req: Request) {
             userId: user._id,
             type: 'credit',
             amount: amount,
-            currency: 'USD',
-            description: `Wallet top-up: $${amount} USD`,
+            currency: 'EUR',
+            description: `Wallet top-up: ${amount}€ EUR`,
             status: 'pending',
           });
 
           // Create and confirm PaymentIntent with saved card
           const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(amount * 100), // Convert to cents
-            currency: 'usd',
+            currency: 'eur',
             customer: user.stripeCustomerId,
             payment_method: paymentMethodId,
             off_session: true,
@@ -179,14 +179,14 @@ export async function POST(req: Request) {
               userId: user._id,
               type: 'wallet_topup',
               amount,
-              currency: 'USD',
+              currency: 'EUR',
               status: 'paid',
               paymentMethod: {
                 type: 'card',
                 last4: paymentMethods.data[0].card?.last4,
                 brand: paymentMethods.data[0].card?.brand,
               },
-              description: `Rechargement de solde: $${amount} USD`,
+              description: `Rechargement de solde: ${amount}€ EUR`,
               transactionId: transaction._id,
               stripePaymentIntentId: paymentIntent.id,
               metadata: {
@@ -200,7 +200,7 @@ export async function POST(req: Request) {
               success: true,
               charged: true,
               newBalance,
-              message: `$${amount} added to your wallet successfully!`,
+              message: `${amount}€ added to your wallet successfully!`,
             });
           } else {
             // Payment requires action or failed
@@ -242,8 +242,8 @@ export async function POST(req: Request) {
       userId: user._id,
       type: 'credit',
       amount: amount,
-      currency: 'USD',
-      description: `Wallet top-up: $${amount} USD`,
+      currency: 'EUR',
+      description: `Wallet top-up: ${amount}€ EUR`,
       status: 'pending',
     });
 
@@ -258,10 +258,10 @@ export async function POST(req: Request) {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'eur',
             product_data: {
               name: 'Wallet Top-Up',
-              description: `Add $${amount} to your STABLEVPS wallet`,
+              description: `Add ${amount}€ to your STABLEVPS wallet`,
             },
             unit_amount: Math.round(amount * 100),
           },

@@ -12,7 +12,7 @@ export default function Security() {
   return (
     <section id="security" className="py-24 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-black to-gray-950" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-white to-gray-100 dark:from-gray-950 dark:via-black dark:to-gray-950" />
       
       {/* Animated Shield Background */}
       <div className="absolute inset-0 flex items-center justify-center opacity-5">
@@ -26,29 +26,29 @@ export default function Security() {
           {/* Content Side */}
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
-              <span className="text-green-400 text-sm font-medium">{t('badge')}</span>
+              <span className="text-green-600 dark:text-green-400 text-sm font-medium">{t('badge')}</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
               <span className="gradient-text">{t('titleHighlight')}</span>
             </h2>
 
             {/* Security Stats */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <p className="text-3xl font-bold gradient-text mb-1">0</p>
-                <p className="text-gray-400 text-sm">{t('stats.incidents')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('stats.incidents')}</p>
               </div>
-              <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <p className="text-3xl font-bold gradient-text mb-1">L4</p>
-                <p className="text-gray-400 text-sm">{t('stats.protection')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('stats.protection')}</p>
               </div>
-              <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <p className="text-3xl font-bold gradient-text mb-1">256-bit</p>
-                <p className="text-gray-400 text-sm">{t('stats.encryption')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('stats.encryption')}</p>
               </div>
-              <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-800">
                 <p className="text-3xl font-bold gradient-text mb-1">24/7</p>
-                <p className="text-gray-400 text-sm">{t('stats.monitoring')}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{t('stats.monitoring')}</p>
               </div>
             </div>
           </div>

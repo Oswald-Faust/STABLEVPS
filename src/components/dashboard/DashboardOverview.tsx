@@ -161,7 +161,7 @@ export default function DashboardOverview({ user, services, recentTickets }: Das
                 </button>
              </div>
              <div className="p-6 text-muted text-sm">
-                Your current commission balance is $0.00 USD. You may withdraw your earnings now.
+                Your current commission balance is 0.00€ EUR. You may withdraw your earnings now.
              </div>
         </div>
 
