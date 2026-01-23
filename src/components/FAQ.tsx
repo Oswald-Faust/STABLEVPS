@@ -10,7 +10,7 @@ export default function FAQ() {
   const faqKeys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
   return (
-    <section id="faq" className="py-24 relative overflow-hidden">
+    <section id="faq" className="pt-12 pb-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gray-50 dark:bg-black" />
       <div className="absolute inset-0 grid-pattern opacity-20" />

@@ -10,7 +10,7 @@ export default function Security() {
 
 
   return (
-    <section id="security" className="py-24 relative overflow-hidden">
+    <section id="security" className="pt-24 pb-0 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-white to-gray-100 dark:from-gray-950 dark:via-black dark:to-gray-950" />
       
@@ -55,12 +55,12 @@ export default function Security() {
 
           {/* Features Side */}
           {/* Image Side */}
-          <div className="relative h-[600px] w-full rounded-2xl overflow-hidden group">
+          <div className="relative h-[250px] lg:h-[600px] w-full rounded-2xl overflow-hidden group">
             <Image
               src={connectionImg}
               alt="Secure Data Center London"
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              className="object-contain lg:object-cover transition-transform duration-700 group-hover:scale-105"
             />
             
             {/* Overlay Gradient */}
