@@ -18,11 +18,6 @@ const PLANS = {
 
 const LOCATIONS = [
   { id: 'london' as const, name: 'Londres', country: 'UK', flag: '🇬🇧', latency: '<1ms' },
-  { id: 'amsterdam' as const, name: 'Amsterdam', country: 'Pays-Bas', flag: '🇳🇱', latency: '<2ms' },
-  { id: 'frankfurt' as const, name: 'Francfort', country: 'Allemagne', flag: '🇩🇪', latency: '<2ms' },
-  { id: 'newYork' as const, name: 'New York', country: 'USA', flag: '🇺🇸', latency: '<3ms' },
-  { id: 'singapore' as const, name: 'Singapour', country: 'Singapour', flag: '🇸🇬', latency: '<5ms' },
-  { id: 'tokyo' as const, name: 'Tokyo', country: 'Japon', flag: '🇯🇵', latency: '<5ms' },
 ];
 
 export default function SignupPage() {

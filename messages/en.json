@@ -14,10 +14,10 @@
   },
   "hero": {
     "badge": "+500 Traders trust us",
-    "title1": "The",
-    "titleHighlight": "Trading",
-    "title2": "VPS that never",
-    "titleHighlight2": "sleeps",
+    "title1": "The Trading",
+    "titleHighlight": "VPS",
+    "title2": "",
+    "titleHighlight2": "that never sleeps",
     "subtitle": "Your Windows desktop stays connected and operational in the Cloud 24/7. Ultra-low latency of {latency}, Anti-DDoS protection and technical support available at all times.",
     "features": {
       "latency": "Latency as low as 1ms",

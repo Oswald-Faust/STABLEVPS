@@ -16,8 +16,8 @@
     "badge": "+500 Traders nous font confiance",
     "title1": "Le VPS",
     "titleHighlight": "Trading",
-    "title2": "qui ne dort",
-    "titleHighlight2": "jamais",
+    "title2": "",
+    "titleHighlight2": "qui ne dort jamais",
     "subtitle": "Votre bureau Windows reste connecté et opérationnel dans le Cloud 24/7. Latence ultra-faible de {latency}, protection Anti-DDoS et support technique disponible à tout moment.",
     "features": {
       "latency": "Latence aussi basse que 1ms",

@@ -2,10 +2,30 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Transaction from '@/models/Transaction';
+import { getCurrentUser } from '@/lib/auth';
+import { cookies } from 'next/headers';
 
 // Credit a user's wallet manually (for testing/admin purposes)
 export async function POST(req: Request) {
   try {
+    // Auth Check
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_access_token');
+    await dbConnect();
+
+    if (adminToken && adminToken.value === 'granted') {
+       // Allow access
+    } else {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+        }
+        const adminUser = await User.findById(currentUser.userId);
+        if (!adminUser || adminUser.role !== 'admin') {
+          return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+        }
+    }
+
     const body = await req.json();
     const { email, amount, reason } = body;
 
@@ -15,8 +35,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    await dbConnect();
 
     const user = await User.findOne({ email: email.toLowerCase() });
     

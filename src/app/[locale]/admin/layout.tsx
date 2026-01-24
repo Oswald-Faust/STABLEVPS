@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, createContext, useContext } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 
@@ -20,8 +20,11 @@ export const useAdmin = () => {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [openTickets, setOpenTickets] = useState(0);
+
+
 
   const fetchStats = async () => {
     try {
@@ -36,33 +39,43 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   useEffect(() => {
+    // Skip check on login page
+    if (pathname?.includes('/admin/login')) {
+      return;
+    }
+
     const checkAdmin = async () => {
       try {
-        const res = await fetch('/api/user');
+        const res = await fetch('/api/admin/check');
         if (res.ok) {
-          const data = await res.json();
-          if (data.user?.role !== 'admin') {
-            router.push('/dashboard');
-            return;
-          }
           await fetchStats();
           setLoading(false);
         } else {
-          router.push('/login');
+          router.push('/admin/login');
         }
       } catch (error) {
         console.error('Admin check failed', error);
-        router.push('/login');
+        router.push('/admin/login');
       }
     };
 
     checkAdmin();
-  }, [router]);
+  }, [router, pathname]);
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Logout failed', error);
+      router.push('/admin/login');
+    }
   };
+
+  // If on login page, render children directly without layout
+  if (pathname?.includes('/admin/login')) {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return (

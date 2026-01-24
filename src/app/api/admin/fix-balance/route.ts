@@ -1,11 +1,30 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import mongoose from 'mongoose';
+import { getCurrentUser } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import User from '@/models/User';
 
 // Direct MongoDB update to fix balance field for all users
 export async function POST() {
   try {
+    // Auth Check
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_access_token');
     await dbConnect();
+
+    if (adminToken && adminToken.value === 'granted') {
+       // Allow access
+    } else {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+        }
+        const adminUser = await User.findById(currentUser.userId);
+        if (!adminUser || adminUser.role !== 'admin') {
+          return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+        }
+    }
 
     const db = mongoose.connection.db;
     

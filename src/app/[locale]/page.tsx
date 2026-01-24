@@ -24,8 +24,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Header isLoggedIn={isLoggedIn} />
       <Hero isLoggedIn={isLoggedIn} />
       <HowItWorks />
-      <Features />
       <Pricing />
+      <Features />
       <Locations />
       <Security />
       <FAQ />

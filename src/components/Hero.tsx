@@ -125,11 +125,12 @@ export default function Hero({ isLoggedIn }: { isLoggedIn?: boolean }) {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          {/* Main Heading */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-tight mb-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             {t('title1')} 
-            <span className="gradient-text"> {t('titleHighlight')} </span>
+            <span className="text-white"> {t('titleHighlight')} </span>
             {t('title2')}<br />
-            <span className="gradient-text">{t('titleHighlight2')}</span>
+            <span className="text-white">{t('titleHighlight2')}</span>
           </h1>
 
           {/* Subheading */}
