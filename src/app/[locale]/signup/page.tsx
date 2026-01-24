@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
@@ -113,15 +114,18 @@ function SignupContent() {
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <Link href="/" className="inline-flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-              </svg>
+          <Link href="/" className="inline-flex items-center gap-4 mb-8 group">
+            <div className="relative w-24 h-24 group-hover:scale-110 transition-transform">
+              <Image 
+                src="/logo.png" 
+                alt="StableVPS" 
+                fill
+                className="object-contain"
+              />
             </div>
             <div>
-              <span className="text-2xl font-bold text-white">STABLE</span>
-              <span className="text-2xl font-bold gradient-text">VPS</span>
+              <span className="text-4xl font-bold text-white">STABLE</span>
+              <span className="text-4xl font-bold gradient-text">VPS</span>
             </div>
           </Link>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">

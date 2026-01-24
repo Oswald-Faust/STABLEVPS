@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 
@@ -55,15 +56,18 @@ export default function LoginPage() {
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative z-10 flex-col justify-between p-12">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-            </svg>
+        <Link href="/" className="flex items-center gap-4 group">
+          <div className="relative w-20 h-20 group-hover:scale-110 transition-transform">
+            <Image 
+              src="/logo.png" 
+              alt="StableVPS" 
+              fill
+              className="object-contain"
+            />
           </div>
           <div>
-            <span className="text-2xl font-bold text-white">STABLE</span>
-            <span className="text-2xl font-bold gradient-text">VPS</span>
+            <span className="text-4xl font-bold text-white">STABLE</span>
+            <span className="text-4xl font-bold gradient-text">VPS</span>
           </div>
         </Link>
 
@@ -113,17 +117,20 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center relative z-10 p-6 lg:p-12">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
-          <Link href="/" className="flex lg:hidden items-center justify-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-              </svg>
-            </div>
-            <div>
-              <span className="text-xl font-bold text-white">STABLE</span>
-              <span className="text-xl font-bold gradient-text">VPS</span>
-            </div>
-          </Link>
+        <Link href="/" className="flex items-center gap-4 group">
+          <div className="relative w-16 h-16 group-hover:scale-110 transition-transform">
+             <Image 
+               src="/logo.png" 
+               alt="StableVPS" 
+               fill
+               className="object-contain"
+             />
+          </div>
+          <div>
+            <span className="text-3xl font-bold text-white">STABLE</span>
+            <span className="text-3xl font-bold gradient-text">VPS</span>
+          </div>
+        </Link>
 
           {/* Login Card */}
           <div className="glass-card rounded-3xl p-8">

@@ -27,6 +27,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: descriptions[locale as keyof typeof descriptions] || descriptions.fr,
     keywords: ["VPS", "Forex", "Trading", "VPS Trading", "Low Latency VPS", "Forex VPS", "MetaTrader VPS", "MT4 VPS", "MT5 VPS"],
     authors: [{ name: "STABLEVPS" }],
+    icons: {
+      icon: '/logo.png',
+      shortcut: '/logo.png',
+      apple: '/logo.png',
+    },
     openGraph: {
       title: titles[locale as keyof typeof titles] || titles.fr,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.fr,

@@ -187,28 +187,28 @@ export default function Pricing() {
         {/* Payment Methods */}
         <div className="mt-16 text-center">
           <p className="text-gray-400 text-sm mb-8 font-medium">{t('paymentMethods')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-6">
+          <div className="flex flex-row items-center justify-center gap-3 sm:gap-6">
             {/* Apple Pay */}
-            <div className="flex items-center justify-center px-6 py-4 bg-[#1a1a1a] rounded-2xl border border-gray-600/50 hover:border-green-500/50 hover:bg-[#222] transition-all duration-300 gap-2">
+            <div className="flex items-center justify-center px-4 sm:px-6 py-3 sm:py-4 bg-[#1a1a1a] rounded-xl sm:rounded-2xl border border-gray-600/50 hover:border-green-500/50 hover:bg-[#222] transition-all duration-300 gap-1 sm:gap-2 flex-1 max-w-[140px]">
               {/* Apple Logo */}
-              <svg className="h-8 w-8" viewBox="0 0 24 24" fill="white">
+              <svg className="h-6 w-6 sm:h-8 sm:w-8" viewBox="0 0 24 24" fill="white">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
               </svg>
               {/* Pay text */}
-              <span className="text-white text-2xl font-medium tracking-tight">Pay</span>
+              <span className="text-white text-xl sm:text-2xl font-medium tracking-tight">Pay</span>
             </div>
             
             {/* Visa - avec fond blanc pour que les couleurs soient visibles */}
-            <div className="flex items-center justify-center px-8 py-4 bg-white rounded-2xl border border-gray-600/50 hover:border-green-500/50 transition-all duration-300 min-w-[140px]">
-              <svg className="h-10 w-auto" viewBox="0 0 750 471" fill="none">
+            <div className="flex items-center justify-center px-4 sm:px-8 py-3 sm:py-4 bg-white rounded-xl sm:rounded-2xl border border-gray-600/50 hover:border-green-500/50 transition-all duration-300 flex-1 max-w-[140px]">
+              <svg className="h-8 sm:h-10 w-auto" viewBox="0 0 750 471" fill="none">
                 <path d="M278.197 334.228l33.36-195.763h53.358l-33.384 195.763H278.197zm246.09-191.54c-10.57-3.966-27.135-8.222-47.82-8.222-52.725 0-89.863 26.55-90.18 64.603-.296 28.13 26.514 43.822 46.752 53.186 20.77 9.596 27.752 15.715 27.654 24.283-.133 13.123-16.586 19.116-31.922 19.116-21.357 0-32.703-2.967-50.225-10.276l-6.878-3.112-7.487 43.823c12.463 5.464 35.51 10.199 59.438 10.445 56.09 0 92.5-26.248 92.916-66.884.199-22.276-14.016-39.216-44.8-53.188-18.65-9.055-30.072-15.099-29.951-24.268 0-8.137 9.668-16.838 30.557-16.838 17.449-.27 30.09 3.535 39.938 7.5l4.781 2.26 7.227-42.428zm137.31-4.223h-41.232c-12.773 0-22.332 3.487-27.941 16.234l-79.244 179.402h56.031s9.16-24.122 11.232-29.418c6.125 0 60.555.084 68.336.084 1.596 6.853 6.49 29.334 6.49 29.334h49.512l-43.184-195.636zm-65.418 126.407c4.414-11.278 21.26-54.723 21.26-54.723-.317.522 4.379-11.334 7.074-18.693l3.605 16.879s10.219 46.729 12.354 56.537h-44.293zM209.17 138.465l-52.24 133.496-5.567-27.13c-9.725-31.273-40.025-65.157-73.898-82.118l47.766 171.203 56.456-.063 84.004-195.388h-56.52z" fill="#1A1F71"/>
                 <path d="M131.92 138.465H45.879l-.682 4.073c66.938 16.205 111.232 55.363 129.618 102.416l-18.71-89.96c-3.23-12.395-12.597-16.094-24.186-16.529z" fill="#F9A533"/>
               </svg>
             </div>
             
             {/* Mastercard - avec fond blanc pour mieux voir les cercles */}
-            <div className="flex items-center justify-center px-8 py-4 bg-[#1a1a1a] rounded-2xl border border-gray-600/50 hover:border-green-500/50 hover:bg-[#222] transition-all duration-300 min-w-[140px]">
-              <svg className="h-10 w-auto" viewBox="0 0 131.39 86.9" fill="none">
+            <div className="flex items-center justify-center px-4 sm:px-8 py-3 sm:py-4 bg-[#1a1a1a] rounded-xl sm:rounded-2xl border border-gray-600/50 hover:border-green-500/50 hover:bg-[#222] transition-all duration-300 flex-1 max-w-[140px]">
+              <svg className="h-8 sm:h-10 w-auto" viewBox="0 0 131.39 86.9" fill="none">
                 <circle cx="43.45" cy="43.45" r="43.45" fill="#EB001B"/>
                 <circle cx="87.94" cy="43.45" r="43.45" fill="#F79E1B"/>
                 <path d="M65.69 16.68a43.3 43.3 0 0 0-16.4 26.77 43.3 43.3 0 0 0 16.4 26.77 43.3 43.3 0 0 0 16.4-26.77 43.3 43.3 0 0 0-16.4-26.77z" fill="#FF5F00"/>
