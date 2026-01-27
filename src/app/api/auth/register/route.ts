@@ -2,24 +2,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { stripe, PLANS, PlanId, BillingCycle, getPlanPrice } from '@/lib/stripe';
+import { signToken } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
 
     const body = await request.json();
-    const { email, password, firstName, lastName, planId, billingCycle, location } = body;
+    const { email, password, firstName, lastName, planId, billingCycle, location, isRegisterOnly } = body;
 
     // Validation
-    if (!email || !password || !firstName || !lastName || !planId || !billingCycle || !location) {
+    if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
       );
     }
 
+    if (!isRegisterOnly && (!planId || !billingCycle || !location)) {
+      return NextResponse.json(
+        { error: 'Plan, billing cycle and location are required' },
+        { status: 400 }
+      );
+    }
+
     // Check if plan exists
-    if (!PLANS[planId as PlanId]) {
+    if (!isRegisterOnly && !PLANS[planId as PlanId]) {
       return NextResponse.json(
         { error: 'Invalid plan selected' },
         { status: 400 }
@@ -52,16 +60,42 @@ export async function POST(request: NextRequest) {
       firstName,
       lastName,
       stripeCustomerId: stripeCustomer.id,
-      subscription: {
-        planId,
-        billingCycle,
-        status: 'pending',
-      },
-      vps: {
-        location,
-        status: 'provisioning',
-      },
+      ...(isRegisterOnly ? {} : {
+        subscription: {
+          planId,
+          billingCycle,
+          status: 'pending',
+        },
+        vps: {
+          location,
+          status: 'provisioning',
+        },
+      })
     });
+
+    if (isRegisterOnly) {
+      // Generate JWT token
+      const token = signToken({
+        userId: user._id.toString(),
+        email: user.email,
+      });
+
+      const response = NextResponse.json({
+        success: true,
+        userId: user._id.toString(),
+      });
+
+      // Set HTTP-only cookie
+      response.cookies.set('auth_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+
+      return response;
+    }
 
     // Calculate price
     const price = getPlanPrice(planId as PlanId, billingCycle as BillingCycle);

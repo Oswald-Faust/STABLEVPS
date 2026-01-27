@@ -71,7 +71,7 @@ export default function DashboardOverview({ user, services, recentTickets }: Das
               <Rocket className="text-white" size={28} />
             </div>
             <div>
-              <h3 className="text-white font-bold text-lg">Commander un nouveau VPS</h3>
+              <h3 className="text-white font-bold text-lg">COMMANDER UN VPS ICI !</h3>
               <p className="text-white/80 text-sm">Déployez un serveur en quelques clics • Payez avec votre solde</p>
             </div>
           </div>

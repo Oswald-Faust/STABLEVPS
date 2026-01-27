@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
@@ -47,6 +47,14 @@ function SignupContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isRegisterOnly, setIsRegisterOnly] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('mode') === 'free') {
+      setIsRegisterOnly(true);
+      setStep(3);
+    }
+  }, [searchParams]);
 
   const getPrice = () => {
     const plan = PLANS[selectedPlan];
@@ -75,9 +83,10 @@ function SignupContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          planId: selectedPlan,
-          billingCycle,
-          location: selectedLocation,
+          planId: isRegisterOnly ? 'none' : selectedPlan,
+          billingCycle: isRegisterOnly ? 'monthly' : billingCycle,
+          location: isRegisterOnly ? 'london' : selectedLocation,
+          isRegisterOnly
         }),
       });
 
@@ -90,6 +99,8 @@ function SignupContent() {
       // Redirect to Stripe Checkout
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
+      } else if (data.success) {
+        window.location.href = '/dashboard/order';
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -242,9 +253,12 @@ function SignupContent() {
                 })}
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-4">
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => {
+                    setIsRegisterOnly(false);
+                    setStep(2);
+                  }}
                   className="btn-primary px-12 py-4"
                 >
                   {t('continue')}
@@ -252,6 +266,24 @@ function SignupContent() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </button>
+
+                <div className="flex flex-col items-center gap-2 mt-4 p-6 glass-card border-dashed border-gray-700 w-full max-w-md">
+                  <p className="text-gray-400 text-sm text-center">
+                    {t('registerOnlySub')}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsRegisterOnly(true);
+                      setStep(3);
+                    }}
+                    className="text-green-500 hover:text-green-400 font-medium flex items-center gap-2 group transition-all"
+                  >
+                    {t('registerOnly')}
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -313,23 +345,32 @@ function SignupContent() {
               <div className="glass-card rounded-3xl p-8">
                 {/* Order Summary */}
                 <div className="p-4 bg-gray-900/50 rounded-xl mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-400">{t('plan')}</span>
-                    <span className="text-white font-semibold capitalize">{selectedPlan}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-400">{t('locationLabel')}</span>
-                    <span className="text-white">{LOCATIONS.find(l => l.id === selectedLocation)?.name}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-400">{t('billing')}</span>
-                    <span className="text-white">{billingCycle === 'monthly' ? t('monthly') : t('yearly')}</span>
-                  </div>
-                  <div className="border-t border-gray-700 my-3" />
-                  <div className="flex justify-between items-center">
-                    <span className="text-white font-semibold">{t('total')}</span>
-                    <span className="text-2xl font-bold gradient-text">{getPrice()}€</span>
-                  </div>
+                  {!isRegisterOnly ? (
+                    <>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{t('plan')}</span>
+                        <span className="text-white font-semibold capitalize">{selectedPlan}</span>
+                      </div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{t('locationLabel')}</span>
+                        <span className="text-white">{LOCATIONS.find(l => l.id === selectedLocation)?.name}</span>
+                      </div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">{t('billing')}</span>
+                        <span className="text-white">{billingCycle === 'monthly' ? t('monthly') : t('yearly')}</span>
+                      </div>
+                      <div className="border-t border-gray-700 my-3" />
+                      <div className="flex justify-between items-center">
+                        <span className="text-white font-semibold">{t('total')}</span>
+                        <span className="text-2xl font-bold gradient-text">{getPrice()}€</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-2">
+                      <span className="text-white font-semibold">{t('registerOnly')}</span>
+                      <p className="text-gray-400 text-xs mt-1">{t('total')}: 0€</p>
+                    </div>
+                  )}
                 </div>
 
                 {error && (
@@ -425,7 +466,7 @@ function SignupContent() {
                   </div>
 
                   <div className="flex gap-4 pt-4">
-                    <button type="button" onClick={() => setStep(2)} className="btn-secondary flex-1 py-4 justify-center">
+                    <button type="button" onClick={() => setStep(isRegisterOnly ? 1 : 2)} className="btn-secondary flex-1 py-4 justify-center">
                       {t('back')}
                     </button>
                     <button type="submit" disabled={isLoading} className="btn-primary flex-1 py-4 justify-center disabled:opacity-50">
@@ -436,7 +477,7 @@ function SignupContent() {
                         </svg>
                       ) : (
                         <>
-                          {t('payNow')} {getPrice()}€
+                          {isRegisterOnly ? t('createAccount') : `${t('payNow')} ${getPrice()}€`}
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                           </svg>

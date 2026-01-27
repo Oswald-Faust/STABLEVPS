@@ -385,7 +385,10 @@
     "errors": {
       "passwordMismatch": "Passwords do not match",
       "passwordTooShort": "Password must be at least 8 characters"
-    }
+    },
+    "registerOnly": "Create an account",
+    "registerOnlySub": "Create your client area access in seconds.",
+    "createAccount": "Create my account"
   },
   "signupSuccess": {
     "title": "Payment successful",

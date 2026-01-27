@@ -171,7 +171,7 @@ export default function Pricing() {
 
               {/* CTA */}
               <Link
-                href="/signup"
+                href="/signup?mode=free"
                 className={`w-full py-4 rounded-xl font-semibold text-center block transition-all mt-auto ${
                   plan.featured
                     ? 'btn-primary justify-center'
