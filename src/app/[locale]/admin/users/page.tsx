@@ -7,7 +7,8 @@ import {
   Edit2,
   User as UserIcon,
   X,
-  Eye
+  Eye,
+  Trash2
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -64,6 +65,23 @@ export default function AdminUsers() {
       console.error('Failed to save user', error);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.")) return;
+    
+    try {
+      const res = await fetch(`/api/admin/users?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        fetchUsers();
+      } else {
+        alert("Erreur lors de la suppression");
+      }
+    } catch (error) {
+      console.error('Failed to delete user', error);
     }
   };
 
@@ -143,6 +161,13 @@ export default function AdminUsers() {
                     title="Modifier"
                   >
                     <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteUser(user._id)}
+                    className="p-2 bg-gray-100 dark:bg-white/5 hover:bg-red-500 hover:text-white rounded-lg transition-all text-gray-500 dark:text-muted-foreground"
+                    title="Supprimer"
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </td>
               </tr>

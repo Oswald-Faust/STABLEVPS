@@ -95,3 +95,44 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const currentUser = await getCurrentUser();
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_access_token');
+    
+    await dbConnect();
+
+    if (adminToken && adminToken.value === 'granted') {
+      // Allow access
+    } else {
+      if (!currentUser) {
+        return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+      }
+      const admin = await User.findById(currentUser.userId);
+      if (!admin || admin.role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'User deleted successfully' });
+
+  } catch (error) {
+    console.error('Admin delete user error:', error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
+  }
+}
