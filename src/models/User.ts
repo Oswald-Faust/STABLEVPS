@@ -92,7 +92,7 @@ const VPSSubscriptionSchema = new Schema({
   },
   vpsStatus: {
     type: String,
-    enum: ["provisioning", "active", "suspended", "terminated"],
+    enum: ["provisioning", "active", "suspended", "terminated", "failed"],
     default: "provisioning",
   },
   rdpUsername: String,

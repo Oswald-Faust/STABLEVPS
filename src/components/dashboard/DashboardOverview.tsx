@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Box, Ticket, Users, Rocket, ArrowRight } from "lucide-react";
+import { Box, Ticket, Users, Rocket, ArrowRight } from "lucide-react";
 
 interface TicketData {
   id: string;
@@ -48,16 +48,6 @@ export default function DashboardOverview({ user, services, recentTickets }: Das
       <div>
         <h1 className="text-3xl font-light text-foreground">Bienvenue, {user?.firstName}</h1>
         <div className="text-sm text-muted mt-1">Accueil / Espace client</div>
-      </div>
-
-     {/* Search Bar */}
-      <div className="relative">
-         <input 
-           type="text" 
-           placeholder="Interrogez notre base de connaissances..." 
-           className="w-full bg-card border border-card-border shadow-sm rounded p-4 pl-12 text-foreground focus:ring-2 focus:ring-blue-500 outline-none"
-         />
-         <Search className="absolute left-4 top-4 text-muted" size={20} />
       </div>
 
       {/* New Order CTA Banner */}

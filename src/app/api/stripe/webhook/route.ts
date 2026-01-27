@@ -131,28 +131,33 @@ export async function POST(request: NextRequest) {
                  }
                }
 
-               // Trigger Cloudzy Provisioning
+               // Trigger VPS Provisioning
                let vpsId = '';
                let vpsPassword = '';
-               // For dev mode/safety
-               const vpsStatus = 'provisioning';
+               let vpsStatus = 'provisioning';
 
                try {
                  const user = await User.findById(userId);
                  if (user) {
                     const label = `vps-${user.firstName}-${user.lastName}-${Date.now()}`;
+                    console.log(`🚀 Starting provisioning for ${label} on ${location}...`);
+                    
                     const vps = await createForexVPS(planId, label, location);
                     vpsId = vps.instanceId;
-                    // Note: Cloudzy provides password only after VPS is active
                     console.log('✅ VPS Provisioning started:', vpsId);
                  }
-               } catch (vpsError) {
-                 console.error('❌ Failed to provision VPS during webhook (continuing with mock/empty):', vpsError);
-                  if (process.env.NODE_ENV !== 'production') {
+               } catch (vpsError: any) {
+                 console.error('❌ Failed to provision VPS during webhook:', vpsError);
+                 // Mark as failed so user/admin knows
+                 vpsStatus = 'failed';
+                 
+                 // If in dev mode, use mock
+                 if (process.env.NODE_ENV !== 'production') {
                     vpsId = `mock-vps-${Date.now()}`;
                     vpsPassword = `DevPass${Date.now().toString(36)}!`;
+                    vpsStatus = 'provisioning'; // Reset status to allow testing
                     console.log('⚠️ Development mode: Using mock VPS ID');
-                  }
+                 }
                }
 
                // Create new Service object with password

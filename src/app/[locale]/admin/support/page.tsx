@@ -9,7 +9,8 @@ import {
   ArrowLeft,
   Search,
   XCircle,
-  Loader2
+  Loader2,
+  Trash2
 } from 'lucide-react';
 import { useAdmin } from '../layout';
 
@@ -48,6 +49,7 @@ export default function AdminSupport() {
   const [isSendingReply, setIsSendingReply] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -190,6 +192,31 @@ export default function AdminSupport() {
     }
   };
 
+  const handleDeleteTicket = async (id: string) => {
+    if (!confirm("⚠️ Êtes-vous sûr de vouloir supprimer ce ticket ? Cette action est irréversible.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/tickets?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setSelectedTicket(null);
+        await fetchTickets();
+        await refreshStats();
+      } else {
+        alert("Erreur lors de la suppression du ticket");
+      }
+    } catch (error) {
+      console.error('Failed to delete ticket', error);
+      alert("Erreur lors de la suppression du ticket");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'open': return <span className="px-2 py-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-500 rounded-full text-[10px] font-bold uppercase tracking-widest border border-yellow-200 dark:border-yellow-500/20">Ouvert</span>;
@@ -302,6 +329,14 @@ export default function AdminSupport() {
                       {isCancelling ? 'Traitement...' : 'Approuver Annulation'}
                     </button>
                   )}
+                  <button
+                    onClick={() => selectedTicket && handleDeleteTicket(selectedTicket.id)}
+                    disabled={isDeleting}
+                    className="p-2 bg-gray-100 dark:bg-white/5 hover:bg-red-500 hover:text-white rounded-lg transition-all text-gray-500 dark:text-muted-foreground"
+                    title="Supprimer le ticket"
+                  >
+                    {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                  </button>
                   <select 
                     value={selectedTicket.status}
                     onChange={(e) => updateTicketStatus(selectedTicket.id, e.target.value)}

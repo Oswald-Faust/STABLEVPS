@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
@@ -18,8 +18,23 @@ function SignupSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [countdown, setCountdown] = useState(10);
+  const processed = useRef(false);
 
   useEffect(() => {
+    // 1. Verify Payment & Provision Immediately
+    if (sessionId && !processed.current) {
+      processed.current = true; // Mark as processed immediately
+      
+      fetch('/api/stripe/verify-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      }).then(res => {
+         if (res.ok) console.log('✅ Instant provision triggered via signup success');
+      }).catch(err => console.error('Provision trigger failed', err));
+    }
+
+    // 2. Countdown redirect
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -31,7 +46,7 @@ function SignupSuccessContent() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [sessionId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">

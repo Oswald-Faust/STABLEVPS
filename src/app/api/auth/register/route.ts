@@ -66,10 +66,7 @@ export async function POST(request: NextRequest) {
           billingCycle,
           status: 'pending',
         },
-        vps: {
-          location,
-          status: 'provisioning',
-        },
+        // Do NOT create VPS object yet. It will be created upon payment success.
       })
     });
 

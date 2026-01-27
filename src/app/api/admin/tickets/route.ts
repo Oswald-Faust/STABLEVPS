@@ -99,3 +99,44 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const currentUser = await getCurrentUser();
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_access_token');
+    
+    await dbConnect();
+
+    if (adminToken && adminToken.value === 'granted') {
+      // Allow access
+    } else {
+      if (!currentUser) {
+        return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+      }
+      const admin = await User.findById(currentUser.userId);
+      if (!admin || admin.role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Ticket ID required' }, { status: 400 });
+    }
+
+    const deletedTicket = await Ticket.findByIdAndDelete(id);
+
+    if (!deletedTicket) {
+      return NextResponse.json({ error: 'Ticket not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: 'Ticket deleted successfully' });
+
+  } catch (error) {
+    console.error('Admin delete ticket error:', error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
+  }
+}

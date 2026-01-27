@@ -180,10 +180,13 @@ export default function DashboardLayout({
       }))
     : [];
 
-  // Legacy service from old subscription field
-  const legacyService: Service[] = user?.subscription 
+  // Legacy service from old subscription field - ONLY if active or has server ID
+  // This prevents showing 'pending' registrations as ghost VPS instances.
+  const hasActiveLegacy = user?.subscription?.status === 'active' || (user?.vps?.status && user?.vps?.status !== 'provisioning') || user?.vps?.ipAddress;
+
+  const legacyService: Service[] = (user?.subscription && hasActiveLegacy)
     ? [{
-        status: user.vps?.status || 'provisioning',
+        status: user.vps?.status || 'active',
         subscription: user.subscription,
         vps: user.vps
       }] 
