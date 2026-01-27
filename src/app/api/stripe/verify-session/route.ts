@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     
     if (session.subscription) {
       try {
-        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string) as unknown as { current_period_start?: number, current_period_end?: number };
         
         if (subscription.current_period_start) {
              const start = new Date(subscription.current_period_start * 1000);

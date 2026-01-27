@@ -85,6 +85,28 @@ export default function AdminUsers() {
     }
   };
 
+  const toggleAdminRole = async (user: User) => {
+    const newRole = user.role === 'admin' ? 'user' : 'admin';
+    const action = newRole === 'admin' ? 'promouvoir comme administrateur' : 'rétrograder en utilisateur';
+    
+    if (!confirm(`Voulez-vous vraiment ${action} ${user.firstName} ${user.lastName} ?`)) return;
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...user, role: newRole }),
+      });
+      if (res.ok) {
+        fetchUsers();
+      } else {
+        alert("Erreur lors du changement de rôle");
+      }
+    } catch (error) {
+      console.error('Failed to toggle role', error);
+    }
+  };
+
   const filteredUsers = users.filter(user => 
     `${user.firstName} ${user.lastName} ${user.email}`.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -134,9 +156,13 @@ export default function AdminUsers() {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest ${user.role === 'admin' ? 'bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-500' : 'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400'}`}>
-                    {user.role}
-                  </span>
+                  <button 
+                    onClick={() => toggleAdminRole(user)}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest cursor-pointer hover:opacity-80 transition-opacity ${user.role === 'admin' ? 'bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-500' : 'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400'}`}
+                    title="Cliquez pour changer le rôle"
+                  >
+                    {user.role === 'admin' ? 'Administrateur' : 'Utilisateur'}
+                  </button>
                 </td>
                 <td className="px-6 py-4 font-mono text-sm text-green-600 dark:text-green-500 font-bold">${user.balance?.toFixed(2) || '0.00'}</td>
                 <td className="px-6 py-4">
