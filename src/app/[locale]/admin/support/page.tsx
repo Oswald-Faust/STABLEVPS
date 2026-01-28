@@ -288,7 +288,11 @@ export default function AdminSupport() {
         </div>
 
         {/* Conversation View */}
-        <div className={`flex-1 flex flex-col bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 ${!selectedTicket ? 'items-center justify-center p-12 text-center text-gray-500 dark:text-muted-foreground' : ''}`}>
+        <div className={`flex-1 flex-col bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 ${
+          selectedTicket 
+            ? 'flex' 
+            : 'hidden lg:flex items-center justify-center p-12 text-center text-gray-500 dark:text-muted-foreground'
+        }`}>
           {!selectedTicket ? (
             <div className="max-w-xs animate-in zoom-in duration-300">
               <div className="w-20 h-20 bg-gray-100 dark:bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
