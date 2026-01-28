@@ -100,3 +100,54 @@ export async function GET(req: Request) {
     );
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const currentUser = await getCurrentUser();
+    
+    // Check for hardcoded admin cookie first
+    const cookieStore = await cookies();
+    const adminToken = cookieStore.get('admin_access_token');
+    
+    await dbConnect();
+    
+    if (adminToken && adminToken.value === 'granted') {
+       // Allow access
+    } else {
+        if (!currentUser) {
+          return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+        }
+    
+        // Verify admin role from DB
+        const admin = await User.findById(currentUser.userId);
+        if (!admin || admin.role !== 'admin') {
+          return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+        }
+    }
+
+    const { searchParams } = new URL(req.url);
+    const invoiceId = searchParams.get('id');
+    
+    if (!invoiceId) {
+      return NextResponse.json({ error: 'Invoice ID required' }, { status: 400 });
+    }
+
+    const deletedInvoice = await Invoice.findByIdAndDelete(invoiceId);
+    
+    if (!deletedInvoice) {
+      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Invoice deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Delete invoice error:', error);
+    return NextResponse.json(
+      { error: 'An error occurred' },
+      { status: 500 }
+    );
+  }
+}

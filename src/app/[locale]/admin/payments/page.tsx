@@ -6,7 +6,8 @@ import {
   Search, 
   Wallet, 
   ArrowUpRight, 
-  Filter
+  Filter,
+  Trash2
 } from 'lucide-react';
 
 interface Invoice {
@@ -36,6 +37,7 @@ export default function AdminPayments() {
   });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchInvoices();
@@ -53,6 +55,33 @@ export default function AdminPayments() {
       console.error('Failed to fetch invoices', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteInvoice = async (id: string, invoiceNumber: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer la facture ${invoiceNumber} ? Cette action est irréversible.`)) {
+      return;
+    }
+    
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/admin/payments?id=${id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setInvoices(invoices.filter(inv => inv.id !== id));
+        // Recalculate stats
+        fetchInvoices();
+      } else {
+        alert('Erreur: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Failed to delete invoice', error);
+      alert('Erreur lors de la suppression');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -155,7 +184,21 @@ export default function AdminPayments() {
                     <p className="text-[10px] text-gray-500 dark:text-muted-foreground truncate max-w-[140px]">{invoice.userId?.email}</p>
                   </div>
                 </div>
-                {getStatusBadge(invoice.status)}
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(invoice.status)}
+                  <button
+                    onClick={() => deleteInvoice(invoice.id, invoice.invoiceNumber)}
+                    disabled={deletingId === invoice.id}
+                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-50"
+                    title="Supprimer"
+                  >
+                    {deletingId === invoice.id ? (
+                      <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
               </div>
               
               <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-white/5">
@@ -201,7 +244,8 @@ export default function AdminPayments() {
                   <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground">Type</th>
                   <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground">Montant</th>
                   <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground">Date</th>
-                  <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground text-right">Status</th>
+                  <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground">Status</th>
+                  <th className="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground text-right">Actions</th>
                   </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-white/5">
@@ -231,8 +275,22 @@ export default function AdminPayments() {
                       <td className="px-6 py-4 text-xs text-gray-500 dark:text-muted-foreground">
                           {new Date(invoice.createdAt).toLocaleDateString()} {new Date(invoice.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4">
                           {getStatusBadge(invoice.status)}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                          <button
+                            onClick={() => deleteInvoice(invoice.id, invoice.invoiceNumber)}
+                            disabled={deletingId === invoice.id}
+                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-50"
+                            title="Supprimer"
+                          >
+                            {deletingId === invoice.id ? (
+                              <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
                       </td>
                   </tr>
                   ))}

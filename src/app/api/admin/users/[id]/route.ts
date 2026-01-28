@@ -57,9 +57,9 @@ export async function GET(
     // Fetch Tickets
     const tickets = await Ticket.find({ userId: id }).sort({ updatedAt: -1 });
 
-    // Calculate stats
+    // Calculate stats - only count subscription invoices (VPS payments), not wallet top-ups
     const totalSpent = invoices
-        .filter(i => i.status === 'paid')
+        .filter(i => i.status === 'paid' && i.type === 'subscription')
         .reduce((sum, i) => sum + (i.amount || 0), 0);
 
     return NextResponse.json({
