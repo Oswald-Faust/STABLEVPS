@@ -23,8 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [openTickets, setOpenTickets] = useState(0);
-
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const fetchStats = async () => {
     try {
@@ -62,6 +61,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     checkAdmin();
   }, [router, pathname]);
 
+  // Close sidebar when route changes (for mobile)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
@@ -88,11 +92,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminContext.Provider value={{ openTickets, refreshStats: fetchStats }}>
       <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-white flex font-sans transition-colors duration-300">
-        <AdminSidebar openTickets={openTickets} handleLogout={handleLogout} />
+        <AdminSidebar 
+          openTickets={openTickets} 
+          handleLogout={handleLogout}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
         
-        <main className="ml-64 flex-1 overflow-y-auto">
-          <AdminHeader />
-          <div className="p-8 pb-20">
+        {/* Main content - no margin on mobile, margin on lg+ */}
+        <main className="flex-1 lg:ml-64 overflow-y-auto min-h-screen">
+          <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
+          <div className="p-4 lg:p-8 pb-20">
             {children}
           </div>
         </main>
