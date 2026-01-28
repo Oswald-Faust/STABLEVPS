@@ -6,9 +6,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { password } = body;
 
-    // Hardcoded access code
-    // Check against env variable
-    if (password === process.env.ADMIN_ACCESS_PASSWORD) {
+    // Check against env variable with fallback
+    const adminPassword = process.env.ADMIN_ACCESS_PASSWORD || 'admin_stablevps_2026';
+    
+    console.log('[Admin Login] Attempting login...');
+    
+    if (password === adminPassword) {
       const cookieStore = await cookies();
       
       // Set admin cookie

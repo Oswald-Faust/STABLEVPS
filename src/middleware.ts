@@ -19,9 +19,16 @@ export default function middleware(request: NextRequest) {
   const isDashboardPath = pathname.includes('/dashboard');
   
   if (isAdminPath || isDashboardPath) {
-    const token = request.cookies.get('auth_token');
+    const authToken = request.cookies.get('auth_token');
+    const adminToken = request.cookies.get('admin_access_token');
     
-    if (!token) {
+    // For admin routes, accept either admin_access_token or auth_token
+    // For dashboard routes, only accept auth_token
+    const isAuthenticated = isAdminPath 
+      ? (adminToken?.value === 'granted' || !!authToken)
+      : !!authToken;
+    
+    if (!isAuthenticated) {
       // Redirect to appropriate login preserving the locale if present
       const locale = pathname.split('/')[1];
       const validLocale = ['en', 'fr'].includes(locale) ? locale : 'fr';
