@@ -82,30 +82,30 @@ export default function AdminOverview() {
   if (loading) return null; // Let layout handle loading state if initial, or show local spinner
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
         <StatCard 
-          title="Total Utilisateurs" 
+          title="Utilisateurs" 
           value={stats.totalUsers} 
-          icon={<Users className="w-6 h-6" />} 
+          icon={<Users className="w-5 h-5 lg:w-6 lg:h-6" />} 
           color="from-blue-500 to-indigo-600" 
         />
         <StatCard 
           title="VPS Actifs" 
           value={stats.activeVps} 
-          icon={<Server className="w-6 h-6" />} 
+          icon={<Server className="w-5 h-5 lg:w-6 lg:h-6" />} 
           color="from-green-500 to-emerald-600" 
         />
         <StatCard 
-          title="Demandes Ouvertes" 
+          title="Demandes" 
           value={stats.openTickets} 
-          icon={<MessageSquare className="w-6 h-6" />} 
+          icon={<MessageSquare className="w-5 h-5 lg:w-6 lg:h-6" />} 
           color="from-red-500 to-rose-600" 
         />
         <StatCard 
-          title="Solde Total Clients" 
+          title="Solde Clients" 
           value={`$${stats.totalBalance.toFixed(2)}`} 
-          icon={<CheckCircle className="w-6 h-6" />} 
+          icon={<CheckCircle className="w-5 h-5 lg:w-6 lg:h-6" />} 
           color="from-amber-500 to-orange-600" 
         />
       </div>
@@ -160,15 +160,15 @@ export default function AdminOverview() {
 
 function StatCard({ title, value, icon, color }: { title: string, value: string | number, icon: React.ReactNode, color: string }) {
   return (
-    <div className="bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/5 rounded-2xl p-6 shadow-lg hover:border-gray-300 dark:hover:border-white/10 transition-all group overflow-hidden relative duration-300">
-      <div className={`absolute -right-4 -bottom-4 w-24 h-24 bg-gradient-to-tr ${color} opacity-[0.03] rounded-full group-hover:scale-150 transition-all duration-700`}></div>
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 bg-gradient-to-tr ${color} rounded-xl shadow-lg text-white`}>
+    <div className="bg-white dark:bg-[#111111] border border-gray-200 dark:border-white/5 rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg hover:border-gray-300 dark:hover:border-white/10 transition-all group overflow-hidden relative duration-300">
+      <div className={`absolute -right-4 -bottom-4 w-20 lg:w-24 h-20 lg:h-24 bg-gradient-to-tr ${color} opacity-[0.03] rounded-full group-hover:scale-150 transition-all duration-700`}></div>
+      <div className="flex justify-between items-start mb-3 lg:mb-4">
+        <div className={`p-2 lg:p-3 bg-gradient-to-tr ${color} rounded-lg lg:rounded-xl shadow-lg text-white`}>
           {icon}
         </div>
       </div>
-      <h4 className="text-gray-500 dark:text-muted-foreground text-[11px] font-bold uppercase tracking-widest mb-1">{title}</h4>
-      <p className="text-2xl font-black text-gray-900 dark:text-white">{value}</p>
+      <h4 className="text-gray-500 dark:text-muted-foreground text-[9px] lg:text-[11px] font-bold uppercase tracking-widest mb-1">{title}</h4>
+      <p className="text-lg lg:text-2xl font-black text-gray-900 dark:text-white">{value}</p>
     </div>
   );
 }
