@@ -32,6 +32,7 @@ function SignupContent() {
   const t = useTranslations('signup');
   const searchParams = useSearchParams();
   const canceled = searchParams.get('canceled');
+  const refCode = searchParams.get('ref');
 
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('prime');
@@ -48,6 +49,7 @@ function SignupContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isRegisterOnly, setIsRegisterOnly] = useState(false);
+  const [referralData, setReferralData] = useState<{ valid: boolean; referrerName?: string; discountRate?: number } | null>(null);
 
   useEffect(() => {
     if (searchParams.get('mode') === 'free') {
@@ -56,9 +58,48 @@ function SignupContent() {
     }
   }, [searchParams]);
 
-  const getPrice = () => {
+  useEffect(() => {
+    if (refCode) {
+      fetch('/api/referrals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ referralCode: refCode }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.valid) {
+          setReferralData(data);
+          // Auto-switch to register only mode for referrals
+          // The user creates account first, then buys subscription on dashboard
+          setStep(3);
+          setIsRegisterOnly(true);
+        }
+      })
+      .catch(err => console.error('Error validating referral:', err));
+    }
+  }, [refCode]);
+
+  // ... useEffects ... (Keep existing useEffects)
+
+  const getPrice = (original = false) => {
     const plan = PLANS[selectedPlan];
-    return billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
+    const basePrice = billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
+    
+    // Only apply discount if NOT original price requested AND referral is valid
+    if (!original && referralData?.valid && referralData.discountRate) {
+        return (basePrice * (1 - referralData.discountRate / 100)).toFixed(2);
+    }
+    return basePrice.toFixed(2);
+  };
+
+  const getPlanPrice = (planId: PlanId, original = false) => {
+      const plan = PLANS[planId];
+      const basePrice = billingCycle === 'monthly' ? plan.monthlyPrice : Math.round(plan.yearlyPrice / 12 * 100) / 100;
+
+      if (!original && referralData?.valid && referralData.discountRate) {
+          return (basePrice * (1 - referralData.discountRate / 100)).toFixed(2);
+      }
+      return basePrice.toFixed(2);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,7 +127,8 @@ function SignupContent() {
           planId: isRegisterOnly ? 'none' : selectedPlan,
           billingCycle: isRegisterOnly ? 'monthly' : billingCycle,
           location: isRegisterOnly ? 'london' : selectedLocation,
-          isRegisterOnly
+          isRegisterOnly,
+          referralCode: referralData?.valid ? refCode : undefined
         }),
       });
 
@@ -119,7 +161,7 @@ function SignupContent() {
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center gap-4 mb-8 group">
             <div className="relative w-24 h-24 group-hover:scale-110 transition-transform">
               <Image 
@@ -139,7 +181,7 @@ function SignupContent() {
           </h1>
           <p className="text-gray-400 max-w-xl mx-auto">{t('subtitle')}</p>
         </div>
-
+        
         {/* Canceled Alert */}
         {canceled && (
           <div className="max-w-2xl mx-auto mb-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex items-center gap-3">
@@ -148,6 +190,23 @@ function SignupContent() {
             </svg>
             <span className="text-yellow-400">{t('paymentCanceled')}</span>
           </div>
+        )}
+
+        {/* Referral Alert */}
+        {referralData?.valid && (
+            <div className="max-w-2xl mx-auto mb-10 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-4 animate-fade-in-up">
+                <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">🎁</span>
+                </div>
+                <div>
+                    <p className="text-white font-medium text-lg">
+                        Parrainage activé !
+                    </p>
+                    <p className="text-green-400 text-sm">
+                        Créez votre compte maintenant. Vos <span className="font-bold">-{referralData.discountRate}%</span> seront automatiquement appliqués lors de votre première commande sur le dashboard.
+                    </p>
+                </div>
+            </div>
         )}
 
         {/* Progress Steps */}
@@ -199,25 +258,42 @@ function SignupContent() {
                 {(Object.keys(PLANS) as PlanId[]).map((planId) => {
                   const plan = PLANS[planId];
                   const isSelected = selectedPlan === planId;
-                  const price = billingCycle === 'monthly' ? plan.monthlyPrice : Math.round(plan.yearlyPrice / 12);
+                  const originalPrice = getPlanPrice(planId, true);
+                  const displayPrice = getPlanPrice(planId);
+                  const hasDiscount = referralData?.valid;
                   
                   return (
                     <button
                       key={planId}
                       onClick={() => setSelectedPlan(planId)}
-                      className={`glass-card p-6 rounded-2xl text-left transition-all ${
+                      className={`glass-card p-6 rounded-2xl text-left transition-all relative overflow-hidden group ${
                         isSelected ? 'border-green-500 ring-2 ring-green-500/20' : 'hover:border-gray-600'
-                      } ${planId === 'prime' ? 'md:scale-105' : ''}`}
+                      } ${planId === 'prime' ? 'md:scale-105 z-10' : ''}`}
                     >
                       {planId === 'prime' && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-green-500 rounded-full text-xs font-bold text-white">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-green-500 rounded-full text-xs font-bold text-white z-20 shadow-lg shadow-green-500/20">
                           {t('popular')}
                         </div>
                       )}
+
+                      {/* Referral Discount Badge */}
+                      {hasDiscount && (
+                          <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg z-20">
+                              -10%
+                          </div>
+                      )}
+
                       <h3 className="text-xl font-bold text-white mb-2 capitalize">{planId}</h3>
-                      <div className="flex items-baseline gap-1 mb-4">
-                        <span className="text-4xl font-extrabold gradient-text">{price}€</span>
-                        <span className="text-gray-400">/mois</span>
+                      <div className="flex flex-col mb-4">
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-4xl font-extrabold gradient-text">{displayPrice}€</span>
+                            <span className="text-gray-400">/mois</span>
+                        </div>
+                        {hasDiscount && (
+                            <span className="text-sm text-gray-400 line-through decoration-red-500/50">
+                                {originalPrice}€
+                            </span>
+                        )}
                       </div>
                       <div className="space-y-2 text-sm text-gray-400">
                         <div className="flex items-center gap-2">
@@ -259,7 +335,7 @@ function SignupContent() {
                     setIsRegisterOnly(false);
                     setStep(2);
                   }}
-                  className="btn-primary px-12 py-4"
+                  className="btn-primary px-12 py-4 shadow-lg shadow-green-500/20 hover:shadow-green-500/30 transition-all"
                 >
                   {t('continue')}
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -10,6 +10,8 @@ interface User {
   email: string;
   firstName: string;
   lastName: string;
+  referralCode?: string;
+  referredBy?: string;
   balance: number;
   subscription?: {
     planId: string;

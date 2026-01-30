@@ -98,6 +98,8 @@ export async function GET() {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        referralCode: user.referralCode,
+        referredBy: user.referredBy,
         balance: user.balance || 0,
         // New services array (supports multiple VPS)
         services: user.services || [],

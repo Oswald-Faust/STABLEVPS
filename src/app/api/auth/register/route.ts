@@ -1,15 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import Referral from '@/models/Referral';
 import { stripe, PLANS, PlanId, BillingCycle, getPlanPrice } from '@/lib/stripe';
 import { signToken } from '@/lib/auth';
+
+// Generate a unique referral code for new users
+function generateReferralCode(firstName: string, lastName: string): string {
+  const namePart = (firstName.substring(0, 3) + lastName.substring(0, 3)).toUpperCase();
+  const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `${namePart}${randomPart}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
 
     const body = await request.json();
-    const { email, password, firstName, lastName, planId, billingCycle, location, isRegisterOnly } = body;
+    const { email, password, firstName, lastName, planId, billingCycle, location, isRegisterOnly, referralCode } = body;
 
     // Validation
     if (!email || !password || !firstName || !lastName) {
@@ -43,6 +51,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate referral code if provided
+    let referrer = null;
+    if (referralCode) {
+      referrer = await User.findOne({ referralCode: referralCode.toUpperCase() });
+      if (!referrer) {
+        return NextResponse.json(
+          { error: 'Invalid referral code' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Generate unique referral code for new user
+    let newUserReferralCode = generateReferralCode(firstName, lastName);
+    let attempts = 0;
+    while (await User.findOne({ referralCode: newUserReferralCode }) && attempts < 10) {
+      newUserReferralCode = generateReferralCode(firstName, lastName);
+      attempts++;
+    }
+
     // Create Stripe customer
     const stripeCustomer = await stripe.customers.create({
       email: email.toLowerCase(),
@@ -50,6 +78,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         firstName,
         lastName,
+        referralCode: referralCode || '',
       },
     });
 
@@ -60,6 +89,13 @@ export async function POST(request: NextRequest) {
       firstName,
       lastName,
       stripeCustomerId: stripeCustomer.id,
+      referralCode: newUserReferralCode,
+      referredBy: referrer?._id || undefined,
+      affiliateStats: {
+        totalReferrals: 0,
+        successfulReferrals: 0,
+        totalEarnings: 0,
+      },
       ...(isRegisterOnly ? {} : {
         subscription: {
           planId,
@@ -69,6 +105,24 @@ export async function POST(request: NextRequest) {
         // Do NOT create VPS object yet. It will be created upon payment success.
       })
     });
+
+    // Create pending referral record if referred
+    let referralId = null;
+    if (referrer) {
+      const referralRecord = await Referral.create({
+        referrerId: referrer._id,
+        refereeId: user._id,
+        status: 'pending',
+        discountApplied: 10,
+        commissionRate: 10,
+      });
+      referralId = referralRecord._id.toString();
+
+      // Update referrer's total referrals count
+      await User.findByIdAndUpdate(referrer._id, {
+        $inc: { 'affiliateStats.totalReferrals': 1 }
+      });
+    }
 
     if (isRegisterOnly) {
       // Generate JWT token
@@ -80,6 +134,7 @@ export async function POST(request: NextRequest) {
       const response = NextResponse.json({
         success: true,
         userId: user._id.toString(),
+        referralCode: newUserReferralCode,
       });
 
       // Set HTTP-only cookie
@@ -94,11 +149,18 @@ export async function POST(request: NextRequest) {
       return response;
     }
 
-    // Calculate price
-    const price = getPlanPrice(planId as PlanId, billingCycle as BillingCycle);
+    // Calculate price with discount if referred
+    let price = getPlanPrice(planId as PlanId, billingCycle as BillingCycle);
+    const originalPrice = price;
+    const discountPercent = referrer ? 10 : 0; // 10% discount if referred
+    
+    if (discountPercent > 0) {
+      price = Math.round(price * (1 - discountPercent / 100) * 100) / 100;
+    }
+
     const plan = PLANS[planId as PlanId];
 
-    // Create Stripe Checkout Session
+    // Create Stripe Checkout Session with coupon for referral discount
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomer.id,
       payment_method_types: ['card'],
@@ -108,13 +170,15 @@ export async function POST(request: NextRequest) {
             currency: 'eur',
             product_data: {
               name: `STABLEVPS ${plan.name}`,
-              description: `VPS Trading - ${plan.platforms} plateformes - ${plan.specs.cpu}, ${plan.specs.ram}, ${plan.specs.storage}`,
+              description: referrer 
+                ? `VPS Trading - ${plan.platforms} plateformes - 10% de réduction parrainage!`
+                : `VPS Trading - ${plan.platforms} plateformes - ${plan.specs.cpu}, ${plan.specs.ram}, ${plan.specs.storage}`,
               images: ['https://stablevps.com/logo.png'],
             },
-            unit_amount: price * 100, // Stripe uses cents
+            unit_amount: Math.round(price * 100), // Stripe uses cents
             recurring: billingCycle === 'monthly' 
-              ? { interval: 'month' }
-              : { interval: 'year' },
+              ? { interval: 'month' as const }
+              : { interval: 'year' as const },
           },
           quantity: 1,
         },
@@ -127,6 +191,10 @@ export async function POST(request: NextRequest) {
         planId,
         billingCycle,
         location,
+        referralId: referralId || '',
+        referrerId: referrer?._id?.toString() || '',
+        originalPrice: originalPrice.toString(),
+        discountPercent: discountPercent.toString(),
       },
       subscription_data: {
         metadata: {
@@ -134,6 +202,8 @@ export async function POST(request: NextRequest) {
           planId,
           billingCycle,
           location,
+          referralId: referralId || '',
+          referrerId: referrer?._id?.toString() || '',
         },
       },
     });

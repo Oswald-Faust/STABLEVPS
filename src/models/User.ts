@@ -36,6 +36,14 @@ export interface IUser extends Document {
     zipCode?: string;
     country?: string;
   };
+  // Affiliate system
+  referralCode: string; // Unique code like "JOHN2024"
+  referredBy?: mongoose.Types.ObjectId; // ID of the user who referred this user
+  affiliateStats: {
+    totalReferrals: number;
+    successfulReferrals: number;
+    totalEarnings: number;
+  };
   // Array of VPS subscriptions - supports multiple VPS per user
   services: IVPSSubscription[];
   // Legacy fields for backward compatibility (deprecated)
@@ -149,6 +157,32 @@ const UserSchema = new Schema<IUser>(
       city: String,
       zipCode: String,
       country: String,
+    },
+    // Affiliate system
+    referralCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      uppercase: true,
+    },
+    referredBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      sparse: true,
+    },
+    affiliateStats: {
+      totalReferrals: {
+        type: Number,
+        default: 0,
+      },
+      successfulReferrals: {
+        type: Number,
+        default: 0,
+      },
+      totalEarnings: {
+        type: Number,
+        default: 0,
+      },
     },
     // Array of VPS services
     services: {

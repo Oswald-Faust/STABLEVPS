@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { LogOut, Plus, ShoppingCart, Sun, Moon, User as UserIcon, ChevronDown, ChevronUp, Home, Server, CreditCard, Headphones } from "lucide-react";
+import { LogOut, Plus, ShoppingCart, Sun, Moon, User as UserIcon, ChevronDown, ChevronUp, Home, Server, CreditCard, Headphones, Gift } from "lucide-react";
 import UserInfoModal from "./UserInfoModal";
 import AddFundsModal from "./AddFundsModal";
 
@@ -163,6 +163,12 @@ export default function Sidebar({ user, handleLogout, onUserUpdate }: SidebarPro
                 className="w-full text-left px-4 py-3 text-muted hover:bg-card-border/50 text-sm border-b border-card-border flex items-center gap-3"
             >
                 <Headphones size={16} /> Support
+            </Link>
+            <Link 
+                href="/dashboard/affiliation"
+                className="w-full text-left px-4 py-3 text-muted hover:bg-card-border/50 text-sm border-b border-card-border flex items-center gap-3"
+            >
+                <Gift size={16} /> Affiliation
             </Link>
             <Link 
                 href="/dashboard/order"

@@ -5,6 +5,7 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Transaction from '@/models/Transaction';
 import Invoice from '@/models/Invoice';
+import Referral from '@/models/Referral';
 import { stripe } from '@/lib/stripe';
 import { createForexVPS } from '@/lib/vps-provider';
 
@@ -222,6 +223,58 @@ export async function POST(request: NextRequest) {
                });
                
                console.log(`✅ Subscription activated for user ${userId}. New VPS service added.`);
+
+               // Handle referral commission - Credit the referrer's wallet
+               const referralId = session.metadata?.referralId;
+               const referrerId = session.metadata?.referrerId;
+               
+               if (referralId && referrerId && amount > 0) {
+                  try {
+                    const commissionRate = 10; // 10% commission
+                    const commissionAmount = Math.round(amount * (commissionRate / 100) * 100) / 100;
+                    
+                    // Update the referral record
+                    await Referral.findByIdAndUpdate(referralId, {
+                      status: 'completed',
+                      commissionAmount,
+                      orderAmount: amount,
+                      orderId: session.subscription as string,
+                      stripeSessionId: session.id,
+                      paidAt: new Date(),
+                    });
+                    
+                    // Credit the referrer's wallet
+                    await User.findByIdAndUpdate(referrerId, {
+                      $inc: { 
+                        balance: commissionAmount,
+                        'affiliateStats.successfulReferrals': 1,
+                        'affiliateStats.totalEarnings': commissionAmount,
+                      }
+                    });
+                    
+                    // Create a transaction record for the referral commission
+                    await Transaction.create({
+                      userId: referrerId,
+                      type: 'credit',
+                      amount: commissionAmount,
+                      currency: 'EUR',
+                      description: `Commission parrainage - 10% sur abonnement`,
+                      reference: `referral-${referralId}`,
+                      status: 'completed',
+                      metadata: {
+                        referralId,
+                        refereeId: userId,
+                        orderAmount: amount,
+                        commissionRate,
+                      }
+                    });
+                    
+                    console.log(`🎁 Referral commission: ${commissionAmount}€ credited to referrer ${referrerId}`);
+                  } catch (refError) {
+                    console.error('Error processing referral commission:', refError);
+                    // Don't fail the whole webhook for referral issues
+                  }
+               }
             }
           }
         }

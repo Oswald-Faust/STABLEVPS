@@ -9,9 +9,11 @@ import { useRouter } from "next/navigation";
 // Fixed location: London only
 const LOCATION = { id: 'london', name: 'Londres (UK)', flag: '🇬🇧' };
 
+// ... imports
+
 export default function NewOrderPage() {
   const router = useRouter();
-  const { user, setUser } = useDashboard();
+  const { user, setUser, services } = useDashboard();
   
   const [selectedPlan, setSelectedPlan] = useState<PlanId | null>(null);
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
@@ -20,8 +22,22 @@ export default function NewOrderPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check for referral discount eligibility (First order + has referrer)
+  const hasReferralDiscount = !!(user?.referredBy && (!services || services.length === 0));
+  const discountRate = hasReferralDiscount ? 10 : 0;
+
   const selectedPlanData = selectedPlan ? PLANS[selectedPlan] : null;
-  const price = selectedPlan ? getPlanPrice(selectedPlan, billingCycle) : 0;
+  
+  const getDisplayPrice = (planId: PlanId, cycle: BillingCycle) => {
+    let price = getPlanPrice(planId, cycle);
+    if (hasReferralDiscount) {
+        price = price * (1 - discountRate / 100);
+        return Math.round(price * 100) / 100;
+    }
+    return price;
+  };
+  
+  const price = selectedPlan ? getDisplayPrice(selectedPlan, billingCycle) : 0;
   const userBalance = user?.balance || 0;
   const canPayWithWallet = userBalance >= price;
 
@@ -82,6 +98,18 @@ export default function NewOrderPage() {
         <div className="text-sm text-muted mt-1">Accueil / Espace client / Nouvelle commande</div>
       </div>
 
+      {hasReferralDiscount && (
+        <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 flex items-center gap-3 animate-fade-in-up">
+            <div className="text-2xl">🎁</div>
+            <div>
+                <h3 className="text-green-600 dark:text-green-400 font-bold">Réduction parrainage activée !</h3>
+                <p className="text-sm text-green-700/80 dark:text-green-300/80">
+                    Bénéficiez de <span className="font-bold">-10%</span> sur votre première commande.
+                </p>
+            </div>
+        </div>
+      )}
+
       {/* Step 1: Select Plan */}
       <div className="bg-card border border-card-border rounded-lg shadow overflow-hidden">
         <div className="px-4 py-3 border-b border-card-border bg-gradient-to-r from-purple-600 to-blue-600">
@@ -123,7 +151,8 @@ export default function NewOrderPage() {
         {/* Plans Grid */}
         <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           {Object.entries(PLANS).map(([key, plan]) => {
-            const planPrice = getPlanPrice(key as PlanId, billingCycle);
+            const originalPrice = getPlanPrice(key as PlanId, billingCycle);
+            const displayPrice = getDisplayPrice(key as PlanId, billingCycle);
             const isSelected = selectedPlan === key;
             
             return (
@@ -142,13 +171,27 @@ export default function NewOrderPage() {
                   </div>
                 )}
                 
+                {hasReferralDiscount && (
+                   <div className="absolute top-0 right-0 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-bl-lg z-10">
+                     -10%
+                   </div>
+                )}
+                
                 <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                <div className="text-3xl font-bold text-green-500 mb-1">
-                  {planPrice}€
-                  <span className="text-sm font-normal text-muted">
-                    /{billingCycle === 'monthly' ? 'mois' : 'an'}
-                  </span>
+                <div className="flex flex-col mb-1">
+                    <div className="text-3xl font-bold text-green-500">
+                    {displayPrice}€
+                    <span className="text-sm font-normal text-muted">
+                        /{billingCycle === 'monthly' ? 'mois' : 'an'}
+                    </span>
+                    </div>
+                    {hasReferralDiscount && (
+                        <div className="text-sm text-muted line-through decoration-red-500/50">
+                            {originalPrice}€
+                        </div>
+                    )}
                 </div>
+
                 <div className="text-sm text-muted mb-4">{plan.platforms} plateformes</div>
                 
                 <div className="space-y-2 text-sm">
@@ -174,8 +217,8 @@ export default function NewOrderPage() {
           })}
         </div>
       </div>
-
-      {/* Location Info - Fixed to London */}
+      
+      {/* ... (Location Step - unchanged) ... */}
       <div className="bg-card border border-card-border rounded-lg shadow overflow-hidden">
         <div className="px-4 py-3 border-b border-card-border bg-gradient-to-r from-blue-600 to-cyan-600">
           <h2 className="text-white font-bold flex items-center gap-2">
@@ -282,7 +325,12 @@ export default function NewOrderPage() {
             <div className="space-y-3">
               <div className="flex justify-between text-foreground">
                 <span>Plan {selectedPlanData.name}</span>
-                <span className="font-bold">{price}€</span>
+                <div className="text-right">
+                    {hasReferralDiscount && (
+                        <span className="block text-xs text-green-500">Réduction parrainage -10%</span>
+                    )}
+                    <span className="font-bold">{price}€</span>
+                </div>
               </div>
               <div className="flex justify-between text-muted text-sm">
                 <span>Cycle de facturation</span>
